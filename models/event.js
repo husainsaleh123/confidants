@@ -5,11 +5,12 @@ const Schema = mongoose.Schema;
 const eventSchema = new Schema({
     title: { type: String, required: true },
     date: { type: Date, required: true },
-    type: { type: String, enum: ['birthday', 'anniversary', 'goal'], required: true },
-    friend: { type: Schema.Types.ObjectId, ref: 'Friend' }, 
+    type: { type: String, required: true },
+    friends: [{ type: Schema.Types.ObjectId, ref: 'Friend' }],
     recurring: { type: String, default: 'never' },
     notified: { type: Boolean, default: false },
     description: { type: String },
+    author: { type:Schema.Types.ObjectId, ref: 'User' },
 }, {
     timestamps: true
 });
