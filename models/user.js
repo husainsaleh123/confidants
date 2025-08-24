@@ -23,6 +23,8 @@ const userSchema = new Schema({
     friends:[{type: Schema.Types.ObjectId, ref:"Friend"}],
     interactions:[{type: Schema.Types.ObjectId, ref:"Interaction"}],
     stories:[{type: Schema.Types.ObjectId, ref:"Story"}],
+    events:[{type: Schema.Types.ObjectId, ref:"Event"}],
+
 }, {
     timestamps: true,
     toJSON: {
