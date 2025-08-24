@@ -10,7 +10,7 @@ async function index(req, res) {
 
         res.status(200).json(stories);
     } catch (e) {
-        console.error('Error fetching hoots:', e);
+        console.error('Error fetching stories:', e);
         res.status(400).json({ msg: e.message });
     }
 }
@@ -83,7 +83,7 @@ async function update(req, res) {
     }
 }
 
-async function Show(req, res) {
+async function show(req, res) {
     try {
         const story = await Story.findById(req.params.id)
             .populate('author', 'friendsInvolved'); // populate author and the friends involved
@@ -94,7 +94,7 @@ async function Show(req, res) {
         res.status(400).json({ msg: e.message });
     }
 }
-async function Destroy(req, res) {
+async function destroy(req, res) {
     try {
          if (!req.user) throw new Error('Not logged in');
 
@@ -113,5 +113,5 @@ async function Destroy(req, res) {
     }
 }
 
-export default { index, create, userIndex, update, Destroy , Show};
-export { index, create, userIndex, update, Destroy , Show };
+export default { index, create, userIndex, update, destroy , show};
+export { index, create, userIndex, update, destroy , show };
