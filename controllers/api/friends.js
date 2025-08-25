@@ -146,6 +146,6 @@ async function update(req, res, next) {
 }
 
 
-// export default { index, create, update, destroy, show };
+export default { index, create, update, destroy, show };
 export { index, create, update, destroy, show };
 
