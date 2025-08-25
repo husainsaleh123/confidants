@@ -1,0 +1,52 @@
+/* Same visual language as AddFriendPage */
+$brand: #2E46FF;
+
+.page {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.backBtn {
+  border: 1.5px solid $brand;
+  color: $brand;
+  background: #fff;
+  border-radius: 9999px;
+  padding: .55rem .9rem;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.muted { color: #6b7280; }
+
+.error {
+  color: #ef4444;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: .75rem 1rem;
+  border-radius: .75rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #eef0f4;
+  border-radius: 18px;
+  padding: 1.1rem;
+  box-shadow:
+    0 1px 1px rgba(0,0,0,.02),
+    0 10px 24px rgba(17,24,39,.06);
+}
