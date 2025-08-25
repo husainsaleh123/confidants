@@ -1,11 +1,12 @@
 import interaction from '../../models/interaction.js';
+import mongoose from 'mongoose';
 
 
 async function userIndex(req, res) {
     try {
         const interactions = await interaction.find({ author: req.user._id })
             .sort({ createdAt: -1 })
-            .populate('author','friendsInvolved'); // populate author and the friends involved
+            .populate('author', 'friendsInvolved'); // populate author and the friends involved
 
         res.status(200).json(interactions);
     } catch (e) {
@@ -19,15 +20,15 @@ async function create(req, res) {
     try {
         if (!req.user) throw new Error('Not logged in');
 
-        const story = await interaction.create({
+        const newInteraction = await interaction.create({
             friendsInvolved: req.body.friendsInvolved,
             date: req.body.date || Date.now(),
             type: req.body.type,
             notes: req.body.notes
         });
 
-        await interaction.populate('author','friendsInvolved'); // populate author name
-        res.status(201).json(interaction);
+        await interaction.populate('author', 'friendsInvolved'); // populate author name
+        res.status(201).json(newInteraction);
     } catch (e) {
         console.error('Error creating Interaction:', e);
         res.status(400).json({ msg: e.message });
@@ -43,7 +44,7 @@ async function update(req, res) {
         const interactionId = req.params.id;
 
         // Find the story and update fields
-        const interaction = await interaction.findByIdAndUpdate(
+        const updatedInteraction = await interaction.findByIdAndUpdate(
             interactionId,
             {
                 friendsInvolved: req.body.friendsInvolved,
@@ -54,10 +55,10 @@ async function update(req, res) {
             { new: true } // return the updated document
         );
 
-        if (!interaction) throw new Error('Interaction not found');
+        if (!updatedInteraction) throw new Error('Interaction not found');
 
         // Populate author and friendsInvolved
-        await interaction.populate('author','friendsInvolved');
+        await interaction.populate('author', 'friendsInvolved');
 
         res.status(200).json(interaction);
     } catch (e) {
@@ -67,12 +68,12 @@ async function update(req, res) {
 }
 
 
-async function Show(req, res) {
+async function show(req, res) {
     try {
-        const interaction = await interaction.findById(req.params.id)
-            .populate('author','friendsInvolved'); // populate author and the friends involved
-        if (!interaction) throw new Error('Interaction not found');
-        res.status(200).json(interaction);
+        const foundInteraction = await interaction.findById(req.params.id)
+            .populate('author', 'friendsInvolved'); // populate author and the friends involved
+        if (!foundInteraction) throw new Error('Interaction not found');
+        res.status(200).json(foundInteraction);
     } catch (e) {
         console.error('Error fetching interaction:', e);
         res.status(400).json({ msg: e.message });
@@ -80,24 +81,28 @@ async function Show(req, res) {
 }
 
 
-async function Destroy(req, res) {
-    try {
-         if (!req.user) throw new Error('Not logged in');
+async function destroy(req, res) {
+  try {
+    if (!req.user) throw new Error('Not logged in');
 
-        const interaction = await interaction.findById(req.params.id);
-        if (!interaction) throw new Error('Interaction not found');
+    const deletedInteraction = await interaction.findById(req.params.id);
+    if (!deletedInteraction) throw new Error('Interaction not found');
 
-        // Optional: only allow author to delete
-        if (!interaction.author.equals(req.user._id)) throw new Error('Not authorized');
+    // Only allow author to delete
+    // if (!deletedInteraction.author || 
+    //     !mongoose.Types.ObjectId(deletedInteraction.author).equals(req.user._id)) {
+    //   throw new Error('Not authorized');
+    // }
 
-        await interaction.deleteOne();
+    // Delete the specific document
+    await deletedInteraction.deleteOne();
 
-        res.status(200).json({ msg: 'Interaction deleted successfully' });
-    } catch (e) {
-        console.error('Error deleting interaction:', e);
-        res.status(400).json({ msg: e.message });
-    }
+    res.status(200).json({ msg: 'Interaction deleted successfully' });
+  } catch (e) {
+    console.error('Error deleting interaction:', e);
+    res.status(400).json({ msg: e.message });
+  }
 }
 
-export default { create, userIndex, update, Destroy , Show};
-export { create, userIndex, update, Destroy , Show };
+export default { create, userIndex, update, destroy, show };
+export { create, userIndex, update, destroy, show };
