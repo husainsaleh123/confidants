@@ -1,0 +1,28 @@
+$brand: #2E46FF;
+
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.label {
+  font-size: .9rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.select {
+  padding: .55rem .9rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:focus {
+    border-color: $brand;
+    box-shadow: 0 0 0 3px rgba(46, 70, 255, .15);
+    outline: none;
+  }
+}
