@@ -1,0 +1,65 @@
+$page-max: 1100px;
+$brand: #2E46FF;
+
+.page {
+  max-width: $page-max;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.actionsBar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .75rem;
+  align-items: center;
+}
+
+//.spacer { /* fills middle column */ }
+
+.backBtn,
+.editBtn,
+.removeBtn {
+  font-weight: 800;
+  border-radius: 9999px;
+  padding: .6rem 1rem;
+  line-height: 1;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backBtn {
+  border: 1.5px solid $brand;
+  color: $brand;
+  background: #fff;
+}
+
+.rightActions {
+  display: inline-flex;
+  gap: .6rem;
+}
+
+.editBtn {
+  background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+}
+
+.removeBtn {
+  background: #991B1B;
+  color: #fff;
+  border: 1.5px solid #991B1B;
+  cursor: pointer;
+}
+
+.muted { color: #6b7280; }
+.error {
+  color: #ef4444;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: .75rem 1rem;
+  border-radius: .75rem;
+}
