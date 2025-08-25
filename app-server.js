@@ -2,11 +2,14 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
-// import checkToken from './config/checkToken.js';
-// import ensureLoggedIn from './config/ensureLoggedIn.js';
-// import userRoutes from './routes/api/users.js';
-// import itemRoutes from './routes/api/items.js';
-// import orderRoutes from './routes/api/orders.js';
+import checkToken from './config/checkToken.js';
+import ensureLoggedIn from './config/ensureLoggedIn.js';
+import userRoutes from './routes/api/users.js';
+import eventRoutes from './routes/api/events.js';
+import friendRoutes from './routes/api/friends.js';
+import interactionRoutes from './routes/api/interactions.js';
+import storyRoutes from './routes/api/stories.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,9 +24,11 @@ app.use((req, res, next) => {
 })
 
 // API Routes - these must come before the static file serving
-// app.use('/api/users', userRoutes);
-// app.use('/api/items', checkToken, ensureLoggedIn, itemRoutes);
-// app.use('/api/orders', checkToken, ensureLoggedIn, orderRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/events', checkToken, ensureLoggedIn, eventRoutes);
+app.use('/api/friends', checkToken, ensureLoggedIn, friendRoutes);
+app.use('/api/interactions', checkToken, ensureLoggedIn, interactionRoutes);
+app.use('/api/stories', checkToken, ensureLoggedIn, storyRoutes);
 
 // Determine which directory to serve static files from
 const staticDir = process.env.NODE_ENV === 'production' ? 'dist' : 'public';
