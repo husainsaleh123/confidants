@@ -1,0 +1,90 @@
+$brand: #2E46FF;
+
+.form {
+  display: grid;
+  gap: 1rem;
+}
+
+.identityRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.nameCol {
+  display: grid;
+  gap: .75rem 1rem;
+}
+
+.label {
+  display: grid;
+  gap: .35rem;
+  font-weight: 800;
+}
+
+.labelInline {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+
+  span { font-weight: 800; }
+}
+
+.input {
+  width: 100%;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+
+  &:focus {
+    border-color: $brand;
+    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
+  }
+}
+
+.hint {
+  margin: .15rem 0 0;
+  font-size: .82rem;
+  color: #6b7280;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem 1rem;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: .25rem;
+}
+
+.submitBtn {
+  background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+  border-radius: 9999px;
+  padding: .7rem 1.1rem;
+  line-height: 1;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: .7;
+    cursor: default;
+  }
+}
