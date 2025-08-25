@@ -1,7 +1,7 @@
 // src/pages/Stories/AddStoryPage.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import StoryForm from "../../components/StoryForm";
+import StoryForm from "../../components/Stories/StoryForm";
 import { createStory } from "../../utilities/stories-api";
 import styles from "./AddStoryPage.module.scss";
 
