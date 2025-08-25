@@ -1,5 +1,5 @@
-import friend from "../../models/friend";
-import friend from "../../models/friend";
+import Friend from "../../models/friend.js";
+
 
 
 //add- remove-, edit, list-, get- (friend)
@@ -8,7 +8,7 @@ import friend from "../../models/friend";
 async function index(req, res) {
 
     try {
-        const friends = await friend.find({ user: req.user._id })
+        const friends = await Friend.find({ user: req.user._id })
             .sort({ createdAt: -1 })
         res.status(200).json(friends);
 
@@ -22,7 +22,7 @@ async function index(req, res) {
 
 
 // to add new friend
-export async function create(req, res, next) {
+ async function create(req, res, next) {
     try {
         const { name, nickName, birthday, tags = [], likes = [], dislikes = [], neutral = [], lastContactDate, user } = req.body;
 
@@ -30,7 +30,7 @@ export async function create(req, res, next) {
             return res.status(400).json({ message: "there is something missing (name, nickName or birthday) :( " });
         }
 
-        const newFriend = await friend.create({
+        const newFriend = await Friend.create({
             name: name,
             nickName: nickName,
             birthday: birthday,
@@ -52,8 +52,8 @@ export async function create(req, res, next) {
 
 async function show(req, res) {
     try {
-        const friend = await Friends.findById(req.params.id);
-        res.status(200).json(friend);
+        const foundFriend = await Friend.findById(req.params.id);
+        res.status(200).json(foundFriend);
 
     }
 
@@ -101,10 +101,10 @@ async function show(req, res) {
 
 //remove friend
 
-export async function destroy(req, res, next) {
+ async function destroy(req, res, next) {
     try {
-        const friend = await friend.findByIdAndDelete(req.params.id);
-        if (!friend) return res.status(404).json({ message: 'Friend not found' });
+        const deletedFriend = await Friend.findByIdAndDelete(req.params.id);
+        if (!deletedFriend) return res.status(404).json({ message: 'Friend not found' });
         res.json({ message: 'Friend deleted' });
     } catch (err) {
         next(err);
@@ -114,30 +114,38 @@ export async function destroy(req, res, next) {
 
 
 //edit friends
-async function update(req, res) {
-    try {
-        if (!req.user) throw new Error("not logged in");
+async function update(req, res, next) {
+  try {
+    if (!req.user) throw new Error("not logged in");
 
-        const friendId = req.params.id;
+    const friendId = req.params.id;
 
+    const updatedFriend = await Friend.findByIdAndUpdate(
+      friendId,
+      {
+        name: req.body.name,
+        nickName: req.body.nickName,
+        birthday: req.body.birthday,
+        tags: req.body.tags,
+        likes: req.body.likes,
+        dislikes: req.body.dislikes,
+        neutral: req.body.neutral,
+        lastContactDate: req.body.lastContactDate,
+      },
+      { new: true } // returns the updated document
+    );
 
-        // Find the friend and update fields
-        const friend = await friend.findByIdAndUpdate(
-
-            {
-                name: req.body.name,
-                nickName: req.body.nickName,
-                birthday: req.body.birthday,
-                tags: req.body.tags,
-                likes: req.body.likes,
-                dislikes: req.body.dislikes,
-                neutral: req.body.neutral,
-            })
-    }catch (err) {
-        next(err);
+    if (!updatedFriend) {
+      return res.status(404).json({ message: "Friend not found" });
     }
+
+    res.status(200).json(updatedFriend);
+  } catch (err) {
+    next(err);
+  }
 }
 
-export default { index, create, update, destroy, show };
+
+// export default { index, create, update, destroy, show };
 export { index, create, update, destroy, show };
 
