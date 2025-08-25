@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./FriendForm.module.scss";
 
 /**
  * FriendForm
- * One-page form (prototype shown in multiple screenshots).
- * Fields: avatarUrl, name, nickName, birthday, tags, likes, dislikes, neutral, lastContactDate
+ * Props:
+ * - initial?: object with field defaults (for edit mode)
+ * - submitText?: string (button label)
+ * - submitting?: boolean
+ * - onSubmit(form): callback
  */
-export default function FriendForm({ onSubmit, submitting }) {
+export default function FriendForm({ initial, submitText = "Add friend", submitting, onSubmit }) {
   const [form, setForm] = useState({
     avatarUrl: "",
     name: "",
@@ -19,6 +22,10 @@ export default function FriendForm({ onSubmit, submitting }) {
     lastContactDate: "",
   });
 
+  useEffect(() => {
+    if (initial) setForm((f) => ({ ...f, ...initial }));
+  }, [initial]);
+
   function update(k, v) {
     setForm((f) => ({ ...f, [k]: v }));
   }
@@ -30,7 +37,6 @@ export default function FriendForm({ onSubmit, submitting }) {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      {/* Top row: avatar preview + main identity */}
       <div className={styles.identityRow}>
         <div className={styles.avatarCol}>
           <div className={styles.avatar}>
@@ -97,7 +103,6 @@ export default function FriendForm({ onSubmit, submitting }) {
         </div>
       </div>
 
-      {/* Multi-line chips inputs (comma separated) */}
       <div className={styles.grid}>
         <label className={styles.label}>
           Tags
@@ -150,7 +155,7 @@ export default function FriendForm({ onSubmit, submitting }) {
 
       <div className={styles.actions}>
         <button className={styles.submitBtn} type="submit" disabled={submitting}>
-          {submitting ? "Adding…" : "Add friend"}
+          {submitting ? "Saving…" : submitText}
         </button>
       </div>
     </form>
