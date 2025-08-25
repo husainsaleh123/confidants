@@ -9,7 +9,7 @@ export function getInteractions() {
 }
 
 // Get a single interaction by ID
-export function getInteractions(id) {
+export function getInteraction(id) {
 	return sendRequest(`${BASE_URL}/${id}`);
 }
 
