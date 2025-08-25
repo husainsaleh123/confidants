@@ -1,4 +1,6 @@
+// src/pages/AllFriendsPage/AllFriendsPage.jsx
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./AllFriendsPage.module.scss";
 import { getUserFriends } from "../../../utilities/friends-api";
 import SearchBar from "../../../components/Friends/SearchBar/SearchBar";
@@ -11,9 +13,9 @@ export default function AllFriendsPage() {
   const [error, setError] = useState("");
 
   // filters
-  const [q, setQ] = useState("");                // name/nick search
-  const [tag, setTag] = useState("");            // selected tag
-  const [sentiment, setSentiment] = useState(""); // "", "likes", "dislikes", "neutral"
+  const [q, setQ] = useState("");
+  const [tag, setTag] = useState("");
+  const [sentiment, setSentiment] = useState("");
 
   useEffect(() => {
     let mounted = true;
@@ -42,27 +44,28 @@ export default function AllFriendsPage() {
   const filtered = useMemo(() => {
     const rgx = q ? new RegExp(q, "i") : null;
     return friends.filter(f => {
-      // name or nickname match
       const nameMatch = rgx ? (rgx.test(f.name) || rgx.test(f.nickName)) : true;
-
-      // tag match
       const tagMatch = tag ? (Array.isArray(f.tags) && f.tags.includes(tag)) : true;
-
-      // sentiment match
       let sentimentMatch = true;
       if (sentiment === "likes") sentimentMatch = (f.likes || []).length > 0;
       if (sentiment === "dislikes") sentimentMatch = (f.dislikes || []).length > 0;
       if (sentiment === "neutral") sentimentMatch = (f.neutral || []).length > 0;
-
       return nameMatch && tagMatch && sentimentMatch;
     });
   }, [friends, q, tag, sentiment]);
 
   return (
     <section className={styles.page}>
+      {/* Top bar: count + Add friend */}
+      <div className={styles.topbar}>
+        <p className={styles.count}>You have {friends.length} friend{friends.length === 1 ? "" : "s"}!</p>
+        <Link to="/friends/new" className={styles.addBtn}>
+          + Add friend
+        </Link>
+      </div>
+
       <header className={styles.header}>
         <h1 className={styles.title}>All Friends</h1>
-
         <div className={styles.controls}>
           <SearchBar
             value={q}

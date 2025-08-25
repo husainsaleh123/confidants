@@ -120,3 +120,10 @@ $brand: #2E46FF;
   color: #9ca3af;
   font-weight: 600;
 }
+/* src/components/Friends/FriendCard/FriendCard.module.scss */
+.topMeta { margin-left:auto; }
+//.birthday { /* small icon/text if you add one */ }
+
+.actions { display:flex; gap:.75rem; margin-top:.5rem; }
+//.viewBtn { /* blue rounded button, matches screenshot */ }
+//.removeBtn { /* red rounded button */ }
