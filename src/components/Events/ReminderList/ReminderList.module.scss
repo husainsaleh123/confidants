@@ -1,0 +1,12 @@
+.list {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  font-size: 0.95rem;
+  margin: 20px 0;
+}
