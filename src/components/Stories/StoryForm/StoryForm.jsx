@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./StoryForm.module.scss";
 import PhotoUploader from "./PhotoUploader";
 import FriendSelector from "./FriendSelector";
