@@ -1,9 +1,11 @@
 // src/components/Stories/StoryCard/StoryCard.jsx
 import React from "react";
-import { Link } from "react-router-dom";
-import styles from "./StoryCard.module.scss";
+import { useNavigate } from "react-router-dom";
+// import styles from "./StoryCard.module.scss"; // keep or remove as you like
 
 export default function StoryCard({ story = {}, onClick }) {
+  const navigate = useNavigate();
+
   const { _id, id, title, content, date, createdAt } = story;
   const storyId = _id || id;
 
@@ -37,43 +39,50 @@ export default function StoryCard({ story = {}, onClick }) {
     return `${datePart}, ${timePart}`;
   };
 
-  // Prevent the card-level onClick from triggering when clicking the links
-  const stop = (e) => e.stopPropagation();
+  // Card click → open Show page
+  const handleCardOpen = () => {
+    if (storyId) navigate(`/stories/${storyId}`);
+  };
+
+  // Buttons (stop bubbling so card click doesn't double-fire)
+  const goView = (e) => {
+    e.stopPropagation();
+    if (storyId) navigate(`/stories/${storyId}`);
+  };
+  const goEdit = (e) => {
+    e.stopPropagation();
+    if (storyId) navigate(`/stories/${storyId}/edit`);
+  };
 
   return (
     <article
-      onClick={() => onClick && storyId && onClick(storyId)}
-      style={{ cursor: onClick ? "pointer" : "default" }}
-      className={styles?.root}
+      onClick={handleCardOpen}
+      style={{ cursor: "pointer" }}
+      // className={styles?.root}
+      data-story-id={storyId || ""}
     >
-      {/* Title */}
       <h3>{title || "Untitled story"}</h3>
 
-      {/* Date of the story */}
       {date && (
         <p>
           <strong>Date:</strong> {formatDayDate(date)}
         </p>
       )}
 
-      {/* Short description (content) */}
       {content && <p>{content}</p>}
 
-      {/* Logged timestamp */}
       {createdAt && <p>Logged on {formatLogged(createdAt)}</p>}
 
       {/* Actions */}
-      {storyId && (
-        <nav>
-          <Link to={`/stories/${storyId}`} onClick={stop}>
-            View
-          </Link>
-          {" | "}
-          <Link to={`/stories/${storyId}/edit`} onClick={stop}>
-            Edit
-          </Link>
-        </nav>
-      )}
+      <div>
+        <button type="button" onClick={goView} disabled={!storyId}>
+          View
+        </button>
+     
+        <button type="button" onClick={goEdit} disabled={!storyId}>
+          Edit
+        </button>
+      </div>
     </article>
   );
 }
