@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { deleteInteraction, getInteraction } from "../../../utilities/interaction-api";
-import InteractionCard from "../../../components/interactions/InteractionCard/InteractionCard";
+import InteractionCard from "../../../components/Interactions/InteractionCard/InteractionCard";
 
 export default function ShowInteractionPage() {
   const { id } = useParams();

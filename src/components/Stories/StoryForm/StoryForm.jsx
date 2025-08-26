@@ -1,8 +1,8 @@
 import { useState } from "react";
 import styles from "./StoryForm.module.scss";
-import PhotoUploader from "./PhotoUploader";
-import FriendSelector from "./FriendSelector";
-import MoodSelector from "./MoodSelector";
+import PhotoUploader from "../PhotoUploader/PhotoUploader";
+import FriendSelector from "../FriendSelector/FriendSelector";
+import MoodSelector from "../MoodSelector/MoodSelector";
 
 export default function StoryForm({
   initialData = {},
