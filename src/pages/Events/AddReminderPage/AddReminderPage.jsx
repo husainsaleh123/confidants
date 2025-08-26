@@ -18,14 +18,14 @@ export default function AddEventPage() {
 
       const payload = {
         title: form.title,
-        description: form.description || "",
         date: form.date || null,
-        time: form.time || null,
+        type: form.type || "",
+        description: form.description || "",
         recurring: form.recurring || false,
-        tags: (form.tags || "")
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
+        // tags: (form.tags || "")
+        //   .split(",")
+        //   .map((t) => t.trim())
+        //   .filter(Boolean),
       };
 
       const created = await createEvent(payload);

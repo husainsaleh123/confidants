@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styles from "./ReminderCard.module.scss";
 
 export default function ReminderCard({ reminder }) {
