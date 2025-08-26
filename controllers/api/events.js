@@ -27,6 +27,7 @@ async function create(req, res) {
             recurring: req.body.recurring || 'never',
             notified: req.body.notified || false,
             description: req.body.description || '',
+            author:req.user._id
         });
 
         await event.populate('friends');
