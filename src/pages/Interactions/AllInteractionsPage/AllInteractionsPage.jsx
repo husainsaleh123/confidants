@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getInteractions } from "../../../utilities/interactions-api";
-import InteractionList from "../../../components/interactions/InteractionList";
-
+import InteractionList from "../../../components/Interactions/InteractionList/InteractionList";
 export default function AllInteractionsPage() {
   const nav = useNavigate();
   const [items, setItems] = useState([]);

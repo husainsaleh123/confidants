@@ -1,5 +1,5 @@
 import styles from "./InteractionList.module.scss";
-import InteractionCard from "./InteractionCard";
+import InteractionCard from "../Interactions/InteractionCard/InteractionCard";
 
 /** Normalize a DB doc → InteractionCard shape (only if needed) */
 function toCardItem(ix) {

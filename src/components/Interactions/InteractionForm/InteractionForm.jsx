@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
 import styles from "./InteractionForm.module.scss";
-import FriendSelector from "../friends/FriendSelector";
-import InteractionTypeSelector from "./InteractionTypeSelector";
-
+import FriendSelector from "../../Stories/FriendSelector/FriendSelector";
+import InteractionTypeSelector from "../InteractionTypeSelector/InteractionTypeSelector";
 export default function InteractionForm({
   initialData = {},                // { friendsInvolved, date, type, notes }
   heading = "Add Interaction",
