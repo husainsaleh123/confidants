@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import InteractionForm from "../../../components/interactions/InteractionForm";
-import { getInteraction, updateInteraction } from "../../../utilities/interactions-api";
-import InteractionForm from "../../../components/Interactions/InteractionForm";
+import InteractionForm from "../../../components/Interactions/InteractionForm/InteractionForm";
+import { getInteraction, updateInteraction } from "../../../utilities/interaction-api";
+
+
+
+
+
 
 export default function EditInteractionPage() {
   const { id } = useParams();

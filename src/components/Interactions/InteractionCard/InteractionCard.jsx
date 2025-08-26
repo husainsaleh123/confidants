@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   updateInteraction,
   deleteInteraction,
-} from "../../utilities/interactions-api";
+} from "../../../utilities/interaction-api";
 
 export default function InteractionCard({ item }) {
   // item: { _id, name, date, description, friends:[{_id,name}], favourite }
