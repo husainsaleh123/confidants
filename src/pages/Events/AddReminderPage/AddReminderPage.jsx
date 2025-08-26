@@ -54,8 +54,9 @@ export default function AddEventPage() {
         <ReminderForm onSubmit={handleSubmit} submitting={submitting} />
         {/* make the Button component to fix this */}
         <div className={styles.actions}>
-          <button type="submit" disabled={submitting}>
-            {submitting ? "Saving..." : "Save Reminder"}
+          <button type="submit" >
+            {/* {submitting ? "Saving..." : "Save Reminder"} */}
+            save
           </button>
         </div>
       </div>

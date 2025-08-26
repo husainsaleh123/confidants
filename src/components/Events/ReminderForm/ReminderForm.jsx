@@ -11,8 +11,7 @@ export default function ReminderForm({ onSubmit, submitting }) {
     title: "",
     description: "",
     date: "",
-    time: "",
-    tags: "",
+    type: "",
     recurring: false,
   });
 
@@ -66,20 +65,23 @@ export default function ReminderForm({ onSubmit, submitting }) {
             onChange={(e) => update("date", e.target.value)}
           />
         </label>
+        </div>
+
+        <div className={styles.grid}>
 
         <label className={styles.label}>
-          Time
+          Type
           <input
             className={styles.input}
-            type="time"
+            type="type"
             required
-            value={form.time}
-            onChange={(e) => update("time", e.target.value)}
+            value={form.type}
+            onChange={(e) => update("type", e.target.value)}
           />
         </label>
       </div>
 
-      {/* Tags */}
+      {/* Tags
       <div className={styles.row}>
         <label className={styles.label}>
           Tags
@@ -92,7 +94,7 @@ export default function ReminderForm({ onSubmit, submitting }) {
           />
           <p className={styles.hint}>Separate with commas</p>
         </label>
-      </div>
+      </div> */}
 
       {/* Recurring toggle */}
       <div className={styles.row}>

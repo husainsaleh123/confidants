@@ -23,7 +23,7 @@ $brand: #2E46FF;
 .backBtn {
   border: 1.5px solid $brand;
   color: $brand;
-  background: #fff;
+  background: #883838;
   border-radius: 9999px;
   padding: 0.55rem 0.9rem;
   text-decoration: none;
@@ -32,7 +32,7 @@ $brand: #2E46FF;
 
   &:hover {
     background: $brand;
-    color: #fff;
+    color: #ad2323;
   }
 }
 
@@ -45,7 +45,7 @@ $brand: #2E46FF;
 }
 
 .card {
-  background: #fff;
+  background: #000000;
   border: 1px solid #eef0f4;
   border-radius: 18px;
   padding: 1.1rem;

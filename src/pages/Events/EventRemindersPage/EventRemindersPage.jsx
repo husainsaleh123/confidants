@@ -1,54 +1,58 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./EventRemindersPage.module.scss";
 
+import ReminderList from "../../../components/Events/ReminderList/ReminderList";
 import { getEvents } from "../../../utilities/events-api";
 
 export default function EventRemindersPage() {
+  const navigate = useNavigate();
   const [reminders, setReminders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // search filter
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(""); // search filter
 
   useEffect(() => {
     let mounted = true;
-    (async () => {
+
+    async function fetchEvents() {
       try {
         const data = await getEvents();
+        // ensure data is array
+        const events = Array.isArray(data) ? data : [];
         if (mounted) {
-          setReminders(data || []);
+          setReminders(events);
           setError("");
         }
       } catch (e) {
-        setError(e?.message || "Failed to load reminders.");
+        if (mounted) setError(e?.message || "Failed to load reminders.");
       } finally {
         if (mounted) setLoading(false);
       }
-    })();
-    return () => {
-      mounted = false;
-    };
+    }
+
+    fetchEvents();
+
+    return () => { mounted = false; };
   }, []);
-  
-  // apply search filter
+
+  // search filter
   const filtered = useMemo(() => {
     const rgx = q ? new RegExp(q, "i") : null;
-    return reminders.filter((r) => {
-      return rgx ? rgx.test(r.title) : true;
-    });
+    return reminders.filter((r) => rgx ? rgx.test(r.title) : true);
   }, [reminders, q]);
 
   return (
     <section className={styles.page}>
-      {/* Top bar: count + Add reminder */}
       <div className={styles.topbar}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          ← Back
+        </button>
         <p className={styles.count}>
-          You have {reminders.length} reminder
-          {reminders.length === 1 ? "" : "s"}!
+          You have {reminders.length} reminder{reminders.length === 1 ? "" : "s"}!
         </p>
-        <Link to="/reminders/new" className={styles.addBtn}>
+        <Link to="/events/new" className={styles.addBtn}>
           + Add reminder
         </Link>
       </div>
@@ -74,18 +78,7 @@ export default function EventRemindersPage() {
           {filtered.length === 0 ? (
             <p className={styles.muted}>No reminders found.</p>
           ) : (
-            <ul className={styles.list}>
-              {filtered.map((r) => (
-                <li key={r._id} className={styles.card}>
-                  <h2>{r.title}</h2>
-                  {r.date && (
-                    <p className={styles.date}>
-                      {new Date(r.date).toLocaleDateString()}
-                    </p>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <ReminderList reminders={filtered} />
           )}
         </div>
       )}
