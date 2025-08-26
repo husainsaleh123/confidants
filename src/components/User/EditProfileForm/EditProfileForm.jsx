@@ -1,10 +1,6 @@
 import React from "react";
 import styles from "./EditProfileForm.module.scss";
 
-// Props:
-// - user: { name: string, email: string, avatarUrl?: string }
-// - onSubmit?: (formData: FormData) => Promise<{ user?: any } | any>
-// - setUser?: (user) => void
 export default function EditProfileForm({ user = {}, onSubmit, setUser }) {
   const [name, setName] = useState(user.name || "");
   const [email, setEmail] = useState(user.email || "");

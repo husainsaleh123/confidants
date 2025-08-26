@@ -1,89 +1,69 @@
 // src/pages/EditStoryPage/EditStoryPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
+import EditProfileForm from "../../../components/User/EditProfileForm/EditProfileForm";
 
-export default function EditStoryPage({
-  story: initialStory = null,
-  storyId,
-  loadStory,
-  updateStory,
-  friendsOptions: incomingFriends = [],
-  fetchFriends,
-  moodOptions: incomingMoods = [],
-  fetchMoods,
-  onCancel,
-  onSaved,
+export default function EditProfilePage({
+ 
+  profile: initialProfile = null,     
+  userId,                              
+  loadProfile,                         
+  updateProfile,                       
+  onCancel,                           
+  onSaved,                            
 }) {
-  // ---------- loading / data ----------
-  const [story, setStory] = useState(initialStory);
-  const [loading, setLoading] = useState(!initialStory && !!storyId);
+  const [profile, setProfile] = useState(initialProfile);
+  const [loading, setLoading] = useState(!initialProfile && !!loadProfile);
   const [error, setError] = useState("");
 
-  const [friendsOptions, setFriendsOptions] = useState(incomingFriends);
-  const [moodOptions, setMoodOptions] = useState(
-    incomingMoods.length
-      ? incomingMoods
-      : ["Happy", "Nostalgic", "Excited", "Calm", "Proud", "Grateful"]
-  );
-
-  useEffect(() => {
-    setFriendsOptions(incomingFriends || []);
-  }, [incomingFriends]);
-
-  useEffect(() => {
-    if (incomingMoods?.length) setMoodOptions(incomingMoods);
-  }, [incomingMoods]);
-
-  // Load story if only id provided
+  // Load profile if not provided
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
-      if (initialStory) {
-        setStory(initialStory);
+      if (initialProfile || !loadProfile) {
         setLoading(false);
         return;
       }
-      if (!storyId || !loadStory) return;
-
       try {
         setLoading(true);
-        const s = await loadStory(storyId);
-        if (!cancelled) setStory(s || null);
+        const p = await loadProfile(userId);
+        if (!cancelled) setProfile(p || null);
       } catch {
-        if (!cancelled) setError("Failed to load story.");
+        if (!cancelled) setError("Failed to load profile.");
       } finally {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
-  }, [initialStory, storyId, loadStory]);
 
-  // Optionally fetch friends + moods
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (fetchFriends) {
-        try {
-          const list = await fetchFriends();
-          if (!cancelled && Array.isArray(list)) setFriendsOptions(list);
-        } catch {
-          /* ignore */
-        }
-      }
-      if (fetchMoods) {
-        try {
-          const list = await fetchMoods();
-          if (!cancelled && Array.isArray(list) && list.length) setMoodOptions(list);
-        } catch {
-          /* ignore */
-        }
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchFriends, fetchMoods]);
+    return () => { cancelled = true; };
+  }, [initialProfile, loadProfile, userId]);
 
-  // ---------- form state ----------
-  const normId = (x) => x?._id ||_
+  const handleSubmit = async (payload) => {
+    const id = userId ?? profile?._id ?? profile?.id;
+    const updater = updateProfile || (async () => null);
+
+    // perform update
+    const updated = await updater(id, payload);
+
+    // fall back to local merge if updater doesn't return the object
+    const merged = updated || { ...(profile || {}), ...payload };
+
+    setProfile(merged);
+    onSaved && onSaved(merged);
+  };
+
+  if (loading) return <main><p>Loading…</p></main>;
+  if (error)   return <main><p>{error}</p></main>;
+
+  return (
+    <main>
+      <h1>Edit Profile</h1>
+      <EditProfileForm
+        initial={profile || {}}
+        onCancel={onCancel}
+        onSubmit={handleSubmit}
+        submitLabel="Save changes"
+      />
+    </main>
+  );
+}
