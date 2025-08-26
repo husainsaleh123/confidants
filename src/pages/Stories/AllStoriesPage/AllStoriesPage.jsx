@@ -1,29 +1,106 @@
-// src/pages/Stories/AllStoriesPage/AllStoriesPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import StoryList from "../../../components/Stories/StoryList/StoryList";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function AllStoriesPage({
   stories: incomingStories = [],
   onOpenStory,
   onAddStory,
 }) {
-  const [stories, setStories] = useState(incomingStories);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const idOf = (s) => s?._id || s?.id;
+
+  const readJSON = (k, fallback) => {
+    if (typeof window === "undefined") return fallback;
+    try {
+      const raw = localStorage.getItem(k);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
+  const writeJSON = (k, v) => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(k, JSON.stringify(v));
+    } catch {}
+  };
+
+ 
+  const [extras, setExtras] = useState(() => readJSON("stories:extras", []));
+  const [baseline, setBaseline] = useState(() => readJSON("stories:lastSnapshot", []));
+
+  useEffect(() => {
+    if (!incomingStories || incomingStories.length === 0) return;
+
+    setBaseline(incomingStories);
+    writeJSON("stories:lastSnapshot", incomingStories);
+
+    const incomingIds = new Set(incomingStories.map(idOf).filter(Boolean).map(String));
+    setExtras((prev) => {
+      const next = prev.filter((x) => !incomingIds.has(String(idOf(x))));
+      writeJSON("stories:extras", next);
+      return next;
+    });
+  }, [incomingStories]);
+
+  // When returning from AddStoryPage, merge new story from route state -> extras
+  useEffect(() => {
+    const ns =
+      location.state &&
+      (location.state.newStory ?? location.state.story ?? location.state.data);
+    if (!ns || !idOf(ns)) return;
+
+    const withCreatedAt = { createdAt: ns.createdAt || new Date().toISOString(), ...ns };
+
+    setExtras((prev) => {
+      const exists = prev.some((s) => String(idOf(s)) === String(idOf(withCreatedAt)));
+      const next = exists ? prev : [withCreatedAt, ...prev];
+      writeJSON("stories:extras", next);
+      return next;
+    });
+
+    // Clear route state so back/refresh doesn't re-insert
+    navigate(".", { replace: true, state: {} });
+  }, [location.state, navigate]);
+
+  const displayStories = useMemo(() => {
+    const base =
+      incomingStories && incomingStories.length > 0 ? incomingStories : baseline;
+
+    const seen = new Set();
+    const out = [];
+
+    const pushUnique = (s) => {
+      if (!s) return;
+      const id = idOf(s);
+      const key = id ? `id:${String(id)}` : `noid:${JSON.stringify({ t: s.title, c: s.content, d: s.date, ca: s.createdAt })}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      out.push(s);
+    };
+
+    extras.forEach(pushUnique);
+    base.forEach(pushUnique);
+    return out;
+  }, [extras, baseline, incomingStories]);
+
+  // ---- UI state & handlers (unchanged) ----
   const [queryInput, setQueryInput] = useState("");
   const [filters, setFilters] = useState({ query: "" });
   const [sortOrder, setSortOrder] = useState("recent"); // "recent" | "oldest"
 
-  useEffect(() => {
-    setStories(incomingStories || []);
-  }, [incomingStories]);
-
   const visibleCount = useMemo(() => {
     const q = (filters?.query || "").trim().toLowerCase();
-    if (!q) return stories.length;
-    return stories.filter((s) => {
+    if (!q) return displayStories.length;
+    return displayStories.filter((s) => {
       const hay = ((s.title || "") + " " + (s.content || "")).toLowerCase();
       return hay.includes(q);
     }).length;
-  }, [stories, filters]);
+  }, [displayStories, filters]);
 
   const handleSearch = () => {
     setFilters((prev) => ({ ...prev, query: queryInput.trim() }));
@@ -58,7 +135,7 @@ export default function AllStoriesPage({
           You have <strong>{visibleCount}</strong>{" "}
           {visibleCount === 1 ? "story" : "stories"}.
         </p>
-        <button onClick={handleAddStory}>+ Add story</button>
+        <Link to="/stories/new">+Add story</Link>
       </section>
 
       <section>
@@ -83,7 +160,7 @@ export default function AllStoriesPage({
 
       <section>
         <StoryList
-          stories={stories}
+          stories={displayStories}
           filters={filters}
           sortOrder={sortOrder}
           onCardClick={handleCardClick}

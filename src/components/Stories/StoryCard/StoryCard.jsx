@@ -1,9 +1,11 @@
 // src/components/Stories/StoryCard/StoryCard.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./StoryCard.module.scss";
 
 export default function StoryCard({ story = {}, onClick }) {
-  const { _id, title, content, date, createdAt } = story;
+  const { _id, id, title, content, date, createdAt } = story;
+  const storyId = _id || id;
 
   const isValidDate = (d) => {
     const dt = new Date(d);
@@ -35,10 +37,14 @@ export default function StoryCard({ story = {}, onClick }) {
     return `${datePart}, ${timePart}`;
   };
 
+  // Prevent the card-level onClick from triggering when clicking the links
+  const stop = (e) => e.stopPropagation();
+
   return (
     <article
-      onClick={() => onClick && _id && onClick(_id)}
+      onClick={() => onClick && storyId && onClick(storyId)}
       style={{ cursor: onClick ? "pointer" : "default" }}
+      className={styles?.root}
     >
       {/* Title */}
       <h3>{title || "Untitled story"}</h3>
@@ -55,6 +61,19 @@ export default function StoryCard({ story = {}, onClick }) {
 
       {/* Logged timestamp */}
       {createdAt && <p>Logged on {formatLogged(createdAt)}</p>}
+
+      {/* Actions */}
+      {storyId && (
+        <nav>
+          <Link to={`/stories/${storyId}`} onClick={stop}>
+            View
+          </Link>
+          {" | "}
+          <Link to={`/stories/${storyId}/edit`} onClick={stop}>
+            Edit
+          </Link>
+        </nav>
+      )}
     </article>
   );
 }
