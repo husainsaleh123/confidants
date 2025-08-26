@@ -24,7 +24,8 @@ async function create(req, res) {
             friendsInvolved: req.body.friendsInvolved,
             date: req.body.date || Date.now(),
             type: req.body.type,
-            notes: req.body.notes
+            notes: req.body.notes,
+            author:req.user._id
         });
 
         await interaction.populate('author', 'friendsInvolved'); // populate author name

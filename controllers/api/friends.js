@@ -24,7 +24,7 @@ async function index(req, res) {
 // to add new friend
  async function create(req, res, next) {
     try {
-        const { name, nickName, birthday, tags = [], likes = [], dislikes = [], neutral = [], lastContactDate, user } = req.body;
+        const { name, nickName, birthday, tags = [], likes = [], dislikes = [], neutral = [], lastContactDate } = req.body;
 
         if (!name || !nickName || !birthday) {
             return res.status(400).json({ message: "there is something missing (name, nickName or birthday) :( " });
@@ -39,7 +39,7 @@ async function index(req, res) {
             dislikes: dislikes,
             neutral: neutral,
             lastContactDate: lastContactDate,
-            user: user
+            user: req.user._id
         });
         res.status(201).json(newFriend);
     } catch (err) {
