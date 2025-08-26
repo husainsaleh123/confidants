@@ -3,7 +3,7 @@ $brand: #2E46FF;
 .wrap {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: .5rem;
+  gap: 3rem;
 
   @media (max-width: 480px) {
     grid-template-columns: 1fr;

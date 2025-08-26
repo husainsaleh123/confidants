@@ -1,3 +1,4 @@
+$brand: #2E46FF;
 /* Page layout */
 .page {
   display: flex;
@@ -50,5 +51,24 @@
   border-radius: .75rem;
 }
 .topbar { display:flex; align-items:center; justify-content:space-between; }
-//.count { /* text styling for "You have X friends!" */ }
-//.addBtn { /* style to match blue rounded button */ }
+.count { color: #111827; font-weight: 700; }
+
+.addBtn {
+  background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+  border-radius: 9999px;
+  padding: .6rem 1rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+.filterWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.filterLabel {
+  font-weight: 800;
+  color: #111827;
+}

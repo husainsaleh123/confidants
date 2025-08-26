@@ -15,7 +15,6 @@ export default function FriendDetails({ friend }) {
     likes = [],
     dislikes = [],
     neutral = [],
-    avatarUrl,
   } = friend || {};
 
   const fmt = (d) =>
@@ -32,11 +31,7 @@ export default function FriendDetails({ friend }) {
       {/* Top identity block */}
       <header className={styles.header}>
         <div className={styles.avatar}>
-          {avatarUrl ? (
-            <img src={avatarUrl} alt={`${name}'s avatar`} />
-          ) : (
-            <div className={styles.placeholder} />
-          )}
+          
         </div>
         <div className={styles.ident}>
           <h1 className={styles.name}>{name}</h1>
@@ -115,11 +110,6 @@ export default function FriendDetails({ friend }) {
             <span className={styles.empty}>—</span>
           )}
         </div>
-      </section>
-
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Stories</h2>
-        <div className={styles.storiesEmpty}>No stories yet.</div>
       </section>
     </article>
   );

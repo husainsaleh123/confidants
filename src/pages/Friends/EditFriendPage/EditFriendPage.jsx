@@ -35,7 +35,6 @@ export default function EditFriendPage() {
     if (!friend) return null;
     const join = (arr) => Array.isArray(arr) ? arr.join(", ") : "";
     return {
-      avatarUrl: friend.avatarUrl || "",
       name: friend.name || "",
       nickName: friend.nickName || "",
       birthday: friend.birthday ? friend.birthday.slice(0, 10) : "",
