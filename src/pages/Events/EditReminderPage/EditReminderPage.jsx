@@ -40,11 +40,11 @@ export default function EditEventPage() {
     const join = (arr) => (Array.isArray(arr) ? arr.join(", ") : "");
     return {
       title: event.title || "",
-      description: event.description || "",
       date: event.date ? event.date.slice(0, 10) : "",
-      time: event.time || "",
+      type: form.type || "",
+      description: event.description || "",
       recurring: event.recurring || false,
-      tags: join(event.tags),
+      // tags: join(event.tags),
     };
   }, [event]);
 
@@ -55,14 +55,14 @@ export default function EditEventPage() {
 
       const payload = {
         title: form.title,
-        description: form.description,
         date: form.date || null,
-        time: form.time || null,
+        type: form.type || "",
+        description: form.description,
         recurring: form.recurring || false,
-        tags: String(form.tags || "")
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean),
+        // tags: String(form.tags || "")
+        //   .split(",")
+        //   .map((t) => t.trim())
+        //   .filter(Boolean),
       };
 
       const updated = await updateEvent(id, payload); // PUT /api/events/:id
