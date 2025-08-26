@@ -41,7 +41,7 @@ export default function EditEventPage() {
     return {
       title: event.title || "",
       date: event.date ? event.date.slice(0, 10) : "",
-      type: form.type || "",
+      type: event.type || "",
       description: event.description || "",
       recurring: event.recurring || false,
       // tags: join(event.tags),

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "./EventRemindersPage.module.scss";
 
-import { getUserReminders } from "../../../utilities/events-api";
+import { getEvents } from "../../../utilities/events-api";
 
 export default function EventRemindersPage() {
   const [reminders, setReminders] = useState([]);
@@ -16,7 +16,7 @@ export default function EventRemindersPage() {
     let mounted = true;
     (async () => {
       try {
-        const data = await getUserReminders();
+        const data = await getEvents();
         if (mounted) {
           setReminders(data || []);
           setError("");
@@ -31,7 +31,7 @@ export default function EventRemindersPage() {
       mounted = false;
     };
   }, []);
-
+  
   // apply search filter
   const filtered = useMemo(() => {
     const rgx = q ? new RegExp(q, "i") : null;

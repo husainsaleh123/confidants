@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import styles from "./ShowEventPage.module.scss";
+import styles from "./ShowReminderPage.module.scss";
 
 import { getEvent, deleteEvent } from "../../../utilities/events-api";
 import ReminderCard from "../../../components/Events/ReminderCard/ReminderCard";
