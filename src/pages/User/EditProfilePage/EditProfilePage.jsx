@@ -1,7 +1,7 @@
 // src/pages/User/ProfilePage/EditProfilePage.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import EditProfileForm from "../../components/User/EditProfileForm/EditProfileForm";
+import EditProfileForm from "../../../components/User/EditProfileForm/EditProfileForm";
 
 export default function EditProfilePage({ user, setUser }) {
   const navigate = useNavigate();

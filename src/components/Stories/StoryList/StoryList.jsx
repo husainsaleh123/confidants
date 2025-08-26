@@ -2,28 +2,28 @@ import React, { useMemo } from "react";
 import StoryCard from "../StoryCard/StoryCard";
 
 export default function StoryList({
-  stories = [],      // list of story objects
-  filters = {},      // optional filters
-  sortOrder = "recent", // sort order: "recent" (default) or "oldest"
-  onCardClick,       // handler when a card is clicked
+  stories = [],      
+  filters = {},      
+  sortOrder = "recent", 
+  onCardClick,       
 }) {
-  // helper: safely convert a value to a Date, or null if invalid
+  
   const asDate = (d) => {
     if (!d) return null;
     const dt = new Date(d);
     return Number.isNaN(dt.getTime()) ? null : dt;
   };
 
-  // useMemo: only recompute filtering/sorting when inputs change
+  // Apply filtering + sorting
   const filteredAndSorted = useMemo(() => {
     // destructure possible filters
     const {
-      query,          // free-text search
-      moods,          // list of moods
-      friendIds,      // filter by friends
-      dateFrom,       // earliest story date
-      dateTo,         // latest story date
-      favoritesOnly, // optional if you add a favorite field
+      query,          
+      moods,         
+      friendIds,      
+      dateFrom,       
+      dateTo,         
+      favoritesOnly, 
     } = filters || {};
 
     // normalize query
@@ -67,7 +67,7 @@ export default function StoryList({
       return true; // keep this story
     });
 
-    // step 2: sort by createdAt
+    // sorts the story based on createdAt
     result.sort((a, b) => {
       const da = asDate(a.createdAt) || new Date(0);
       const db = asDate(b.createdAt) || new Date(0);
