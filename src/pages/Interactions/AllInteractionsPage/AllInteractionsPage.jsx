@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getInteractions } from "../../../utilities/interactions-api";
+import { getInteractions } from "../../../utilities/interaction-api";
 import InteractionList from "../../../components/Interactions/InteractionList/InteractionList";
 export default function AllInteractionsPage() {
   const nav = useNavigate();

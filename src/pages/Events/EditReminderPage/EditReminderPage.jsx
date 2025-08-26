@@ -5,7 +5,7 @@ import styles from "./EditReminderPage.module.scss";
 import { getEvent, updateEvent } from "../../../utilities/events-api";
 import ReminderForm from "../../../components/Events/ReminderForm/ReminderForm";
 import RecurringToggle from "../../../components/Events/RecurringToggle/RecurringToggle";
-import { Button } from "../../../components/Button/Button";
+// import { Button } from "../../../components/Button/Button";
 
 export default function EditEventPage() {
   const { id } = useParams();
@@ -100,10 +100,11 @@ export default function EditEventPage() {
             onSubmit={handleSubmit}
             submitting={submitting}
           />
+          {/* make the Button Components to fix this */}
           <div className={styles.actions}>
-            <Button type="submit" disabled={submitting}>
+            <button type="submit" disabled={submitting}>
               {submitting ? "Saving…" : "Save changes"}
-            </Button>
+            </button>
           </div>
         </div>
       )}

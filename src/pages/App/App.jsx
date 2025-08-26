@@ -9,7 +9,7 @@ import ShowReminderPage from '../Events/ShowReminderPage/ShowReminderPage';
 import AddFriendPage from '../Friends/AddFriendPage/AddFriendPage';
 import AllFriendsPage from '../Friends/AllFriendsPage/AllFriendsPage';
 import EditFriendPage from '../Friends/EditFriendPage/EditFriendPage';
-import FavouriteFriendsPage from '../Friends/FavouriteFriendsPage/FavouriteFriendsPage';
+// import FavouriteFriendsPage from '../Friends/FavouriteFriendsPage/FavouriteFriendsPage';
 import ShowFriendPage from '../Friends/ShowFriendPage/ShowFriendPage';
 import Home from '../Home/Home';
 import AddInteractionPage from '../Interactions/AddInteractionPage/AddInteractionPage';
@@ -19,7 +19,7 @@ import ShowInteractionPage from '../Interactions/ShowInteractionPage/ShowInterac
 import AddStoryPage from '../Stories/AddStoryPage/AddStoryPage';
 import AllStoriesPage from '../Stories/AllStoriesPage/AllStoriesPage';
 import EditStoryPage from '../Stories/EditStoryPage/EditStoryPage';
-import FavouriteStoryPage from '../Stories/FavoriteStoryPage/FavoriteStoryPage';
+// import FavouriteStoryPage from '../Stories/FavoriteStoryPage/FavoriteStoryPage';
 import ShowStoryPage from '../Stories/ShowStoryPage/ShowStoryPage';
 import AuthPage from '../User/AuthPage/AuthPage';
 import EditProfilePage from '../User/EditProfilePage/EditProfilePage';
@@ -42,7 +42,7 @@ export default function App() {
             <Route path="/events/:id" element={<ShowReminderPage user={user} setUser={setUser} />} />
             <Route path="/friends" element={<AllFriendsPage user={user} setUser={setUser} />} />
             <Route path="/friends/new" element={<AddFriendPage user={user} setUser={setUser} />} />
-            <Route path="/friends/favourites" element={<FavouriteFriendsPage user={user} setUser={setUser} />} />
+            {/* <Route path="/friends/favourites" element={<FavouriteFriendsPage user={user} setUser={setUser} />} /> */}
             <Route path="/friends/:id/edit" element={<EditFriendPage user={user} setUser={setUser} />} />
             <Route path="/friends/:id" element={<ShowFriendPage user={user} setUser={setUser} />} />
             <Route path="/interactions" element={<AllInteractionsPage user={user} setUser={setUser} />} />
@@ -51,7 +51,7 @@ export default function App() {
             <Route path="/interactions/:id" element={<ShowInteractionPage user={user} setUser={setUser} />} />
             <Route path="/stories" element={<AllStoriesPage user={user} setUser={setUser} />} />
             <Route path="/stories/new" element={<AddStoryPage user={user} setUser={setUser} />} />
-            <Route path="/stories/favourites" element={<FavouriteStoryPage user={user} setUser={setUser} />} />
+            {/* <Route path="/stories/favourites" element={<FavouriteStoryPage user={user} setUser={setUser} />} /> */}
             <Route path="/stories/:id/edit" element={<EditStoryPage user={user} setUser={setUser} />} />
             <Route path="/stories/:id" element={<ShowStoryPage user={user} setUser={setUser} />} />
             <Route path="/auth" element={<AuthPage user={user} setUser={setUser} />} />
