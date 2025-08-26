@@ -6,13 +6,15 @@ import {
   deleteInteraction,
 } from "../../utilities/interactions-api";
 
-export default function InteractionCard({ item, onRemoved, onUpdated }) {
+export default function InteractionCard({ item }) {
   // item: { _id, name, date, description, friends:[{_id,name}], favourite }
   const nav = useNavigate();
   const [fav, setFav] = useState(!!item?.favourite);
   const [busy, setBusy] = useState(false);
+  const [deleted, setDeleted] = useState(false);
 
-  if (!item) return null;
+  if (!item || deleted) return null;
+
   const { _id, name, date, description, friends = [] } = item;
 
   const prettyDate = date
@@ -23,18 +25,34 @@ export default function InteractionCard({ item, onRemoved, onUpdated }) {
       })
     : "—";
 
-  
+  // toggle favourite (no parent callback)
+  const handleFavourite = async () => {
+    if (busy) return;
+    const next = !fav;
+    setBusy(true);
+    setFav(next); // optimistic UI
+    try {
+      await updateInteraction(_id, { favourite: next });
+    } catch (err) {
+      console.error(err);
+      setFav(!next); // revert on error
+      alert("Failed to update favourite");
+    } finally {
+      setBusy(false);
+    }
+  };
 
+  // view interaction
+  const handleView = () => nav(`/interactions/${_id}`);
 
-
-  // 3) remove interaction
+  // remove interaction (hide locally after API success)
   const handleRemove = async () => {
     if (busy) return;
     if (!confirm("Delete")) return;
     setBusy(true);
     try {
       await deleteInteraction(_id);
-      onRemoved?.(_id); // parent removes from list
+      setDeleted(true); // hide this card locally
     } catch (e) {
       console.error(e);
       alert("card not removed");
