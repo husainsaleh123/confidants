@@ -11,7 +11,6 @@ import styles from "./FriendForm.module.scss";
  */
 export default function FriendForm({ initial, submitText = "Add friend", submitting, onSubmit }) {
   const [form, setForm] = useState({
-    avatarUrl: "",
     name: "",
     nickName: "",
     birthday: "",
@@ -40,19 +39,9 @@ export default function FriendForm({ initial, submitText = "Add friend", submitt
       <div className={styles.identityRow}>
         <div className={styles.avatarCol}>
           <div className={styles.avatar}>
-            {form.avatarUrl ? (
-              <img src={form.avatarUrl} alt="Avatar preview" />
-            ) : (
-              <div className={styles.avatarPlaceholder} />
-            )}
+            
           </div>
-          <input
-            type="url"
-            className={styles.input}
-            placeholder="Avatar URL (optional)"
-            value={form.avatarUrl}
-            onChange={(e) => update("avatarUrl", e.target.value)}
-          />
+          
         </div>
 
         <div className={styles.nameCol}>

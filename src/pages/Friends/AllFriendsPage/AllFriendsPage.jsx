@@ -74,12 +74,15 @@ export default function AllFriendsPage() {
             onSentimentChange={setSentiment}
             className={styles.search}
           />
-          <TagList
-            tags={allTags}
-            value={tag}
-            onChange={setTag}
-            className={styles.tags}
-          />
+          <div className={styles.filterWrap}>
+            <span className={styles.filterLabel}>Filter by</span>
+            <TagList
+              tags={allTags}
+              value={tag}
+              onChange={setTag}
+              className={styles.tags}
+            />
+          </div>
         </div>
       </header>
 

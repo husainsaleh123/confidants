@@ -1,8 +1,7 @@
 // src/components/Friends/FriendCard/FriendCard.jsx
 import { Link } from "react-router-dom";
 import styles from "./FriendCard.module.scss";
-
-export default function FriendCard({ friend, onRemove }) {
+export default function FriendCard({ friend }) {
   const {
     _id,
     name,
@@ -13,16 +12,14 @@ export default function FriendCard({ friend, onRemove }) {
     dislikes = [],
     neutral = [],
     lastContactDate,
-    avatarUrl,
   } = friend || {};
-
   const fmt = (d) => (d ? new Date(d).toLocaleDateString() : "—");
 
   return (
     <article className={styles.card}>
       <div className={styles.header}>
         <div className={styles.avatar}>
-          {avatarUrl ? <img src={avatarUrl} alt={`${name}'s avatar`} /> : <div className={styles.placeholder} />}
+        
         </div>
         <div className={styles.ident}>
           <h3 className={styles.name}>{name}</h3>
@@ -70,13 +67,6 @@ export default function FriendCard({ friend, onRemove }) {
         <Link to={`/friends/${_id}`} className={styles.viewBtn}>
           View friend
         </Link>
-        <button
-          type="button"
-          className={styles.removeBtn}
-          onClick={() => onRemove?.(_id)}
-        >
-          Remove friend
-        </button>
       </div>
     </article>
   );

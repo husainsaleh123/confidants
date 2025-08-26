@@ -30,8 +30,7 @@ export default function AddFriendPage() {
         likes: toArr(form.likes),
         dislikes: toArr(form.dislikes),
         neutral: toArr(form.neutral),
-        // avatarUrl is client-side only for now; store if your model supports it
-        avatarUrl: form.avatarUrl || undefined,
+    
       };
 
       const created = await createFriend(payload);
