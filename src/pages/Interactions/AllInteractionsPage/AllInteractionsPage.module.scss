@@ -1,0 +1,123 @@
+/* AllInteractionsPage.module.scss */
+$brand: #2E46FF;
+
+/* Page layout */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem 1rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 860px) {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+  }
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.controls {
+  display: grid;
+  gap: .75rem;
+
+  @media (min-width: 720px) {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+.muted { color: #6b7280; }
+
+.error {
+  color: #ef4444;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: .75rem 1rem;
+  border-radius: .75rem;
+}
+
+.topbar { display:flex; align-items:center; justify-content:space-between; }
+.count { color: #111827; font-weight: 700; }
+
+/* Buttons */
+.addBtn {
+  background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+  border-radius: 9999px;
+  padding: .6rem 1rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* Filter */
+.filterWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.filterLabel {
+  font-weight: 800;
+  color: #111827;
+}
+
+.select {
+  padding: .6rem .9rem;
+  border: 1.5px solid rgba(46,70,255,.45);
+  border-radius: 12px;
+  background: #fff;
+  font-weight: 800;
+  color: #0b1b4f;
+  outline: none;
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
+    border-color: $brand;
+  }
+}
+
+/* Search */
+.search { /* reserved hook */ }
+
+.searchGroup {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .75rem;
+  align-items: center;
+}
+
+.searchInput {
+  width: 100%;
+  padding: .9rem 1rem;
+  border-radius: 14px;
+  border: 2px solid rgba(46,70,255,.6);
+  background: #f7f7fb;
+  outline: none;
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
+  }
+}
+
+.searchBtn {
+  background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+  border-radius: 12px;
+  padding: .7rem 1rem;
+  font-weight: 900;
+  cursor: pointer;
+}

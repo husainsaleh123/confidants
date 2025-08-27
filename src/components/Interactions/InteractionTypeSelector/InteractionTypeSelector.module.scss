@@ -1,0 +1,85 @@
+/* InteractionTypeSelector.module.scss */
+$brand: #2E46FF;
+$ink: #0b1b4f;
+$border: #e5e7eb;
+
+.wrap {
+  display: grid;
+  gap: .6rem;
+}
+
+/* main <select> — big, rounded, blue focus ring */
+.select {
+  width: 100%;
+  padding: .8rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid $border;
+  background: #fff;
+  font-weight: 800;
+  color: $ink;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  appearance: none; /* clean arrow; native caret still shows on most UAs */
+
+  &:focus {
+    border-color: $brand;
+    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
+  }
+
+  &:disabled {
+    background: #f6f7fb;
+    color: #6b7280;
+    cursor: not-allowed;
+  }
+}
+
+/* custom-type row */
+.addRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .6rem;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  border: 1.5px solid $border;
+  background: #fff;
+  font-weight: 600;
+  color: $ink;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+
+  &:focus {
+    border-color: $brand;
+    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
+  }
+
+  &:disabled {
+    background: #f6f7fb;
+    color: #6b7280;
+    cursor: not-allowed;
+  }
+}
+
+/* blue + button */
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1.5px solid $brand;
+  background: $brand;
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+  transition: box-shadow .15s ease, transform .04s ease;
+
+  &:hover { box-shadow: 0 6px 18px rgba(46,70,255,.25); }
+  &:active { transform: translateY(1px); }
+  &:disabled { opacity: .6; cursor: default; box-shadow: none; }
+}

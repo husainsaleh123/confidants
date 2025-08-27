@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import InteractionForm from "../../../components/Interactions/InteractionForm/InteractionForm";
 import { getInteraction, updateInteraction } from "../../../utilities/interaction-api";
+import styles from "./EditInteractionPage.module.scss";
 
 
 
