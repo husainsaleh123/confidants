@@ -1,0 +1,64 @@
+$brand: #2E46FF;
+.friendSelector {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.selectedFriends {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.friendTag {
+	display: flex;
+	align-items: center;
+	background: #fff;
+	border: 2px solid $brand;
+	color: $brand;
+	border-radius: 12px;
+	padding: 0.3rem 0.9rem;
+	font-weight: 600;
+	font-size: 1rem;
+	margin-right: 0.25rem;
+}
+
+.removeBtn {
+	background: none;
+	border: none;
+	color: $brand;
+	font-size: 1.1rem;
+	margin-left: 0.3rem;
+	cursor: pointer;
+	transition: color 0.2s;
+	&:hover {
+		color: #d32f2f;
+	}
+}
+
+.addBtn {
+	background: $brand;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 0.4rem 0.8rem;
+	font-size: 1.2rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background 0.2s;
+	&:hover {
+		background: #1a2bb8;
+	}
+}
+
+.select {
+	border-radius: 10px;
+	border: 1.5px solid #e5e7eb;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+	outline: none;
+	transition: border-color 0.2s;
+	&:focus {
+		border-color: $brand;
+	}
+}

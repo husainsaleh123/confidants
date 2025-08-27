@@ -82,30 +82,27 @@ export default function FriendSelector({
     "Friend";
 
   return (
-    <div>
-      <div>
-        <select value={currentId} onChange={(e) => setCurrentId(e.target.value)}>
-          <option value="">-- Select a friend --</option>
-          {availableOptions.map((f) => {
-            const id = f?._id || f?.id;
-            return (
-              <option key={id} value={id}>
-                {friendLabel(f)}
-              </option>
-            );
-          })}
-        </select>
-        <button type="button" onClick={handleAdd} disabled={!currentId}>+</button>
-      </div>
-
+    <div className="friendSelector">
+      <select className="select" value={currentId} onChange={(e) => setCurrentId(e.target.value)}>
+        <option value="">-- Select a friend --</option>
+        {availableOptions.map((f) => {
+          const id = f?._id || f?.id;
+          return (
+            <option key={id} value={id}>
+              {friendLabel(f)}
+            </option>
+          );
+        })}
+      </select>
+      <button type="button" className="addBtn" onClick={handleAdd} disabled={!currentId}>+</button>
       {(value || []).length > 0 && (
-        <div>
+        <div className="selectedFriends" style={{ marginTop: '0.5rem' }}>
           {(value || []).map((id) => {
             const f = friendById.get(String(id));
             return (
-              <span key={String(id)} style={{ marginRight: 6 }}>
+              <span key={String(id)} className="friendTag">
                 {friendLabel(f)}
-                <button type="button" onClick={() => handleRemove(id)} aria-label="remove friend"> ⓧ </button>
+                <button type="button" className="removeBtn" onClick={() => handleRemove(id)} aria-label="remove friend">ⓧ</button>
               </span>
             );
           })}
