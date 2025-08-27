@@ -109,16 +109,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
               placeholder="e.g., Dentist Appointment"
             />
           </label>
-
-          <label className={styles.label}>
-            Description
-            <textarea
-              className={styles.input}
-              value={form.description}
-              onChange={(e) => update("description", e.target.value)}
-              placeholder="Optional details about this Event Reminders"
-            />
-          </label>
+          
         </div>
       </div>
 
@@ -148,6 +139,22 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
           />
         </label>
       </div>
+      {/* Friends */}
+        <div className={styles.identityRow}>
+        <div className={styles.nameCol}></div>
+
+          <label className={styles.label}>
+            Notes
+            <textarea
+              className={styles.textarea}
+              value={form.description}
+              onChange={(e) => update("description", e.target.value)}
+              placeholder="Optional details about this Event Reminders"
+            />
+          </label>
+        </div>
+      
+
  {/* Friends */}
       <div className={styles.row}>
         <label className={styles.label}>Friends</label>

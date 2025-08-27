@@ -39,9 +39,9 @@ export default function AddEventPage() {
     <section className={styles.page}>
       <div className={styles.headerRow}>
         <h1 className={styles.title}>Add a New Event </h1>
-        <Link to="/events" className={styles.backBtn}>
+        {/* <Link to="/events" className={styles.backBtn}>
           ← Back to all Events
-        </Link>
+        </Link> */}
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
