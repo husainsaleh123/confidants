@@ -1,21 +1,20 @@
-// src/pages/Stories/AddStoryPage.jsx
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import StoryForm from "../../../components/Stories/StoryForm/StoryForm";
 import { createStory } from "../../../utilities/stories-api";
-import styles from "./AddStoryPage.module.scss";
 
 export default function AddStoryPage() {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const toArray = (v) => {
-    if (Array.isArray(v)) return v;
-    if (v == null) return [];
-    return String(v).split(",").map((s) => s.trim()).filter(Boolean);
-  };
+  // utils
+  const toArray = (v) =>
+    Array.isArray(v)
+      ? v
+      : v == null || v === ""
+      ? []
+      : String(v).split(",").map((s) => s.trim()).filter(Boolean);
 
   const idOf = (s) => s?._id || s?.id;
 
@@ -37,23 +36,34 @@ export default function AddStoryPage() {
       const getAllFromFD = (fd, key) => fd.getAll(key).map(String);
 
       let payload;
+
       if (typeof FormData !== "undefined" && form instanceof FormData) {
+        const moodStr = getFromFD(form, "mood");
+        const dateStr = getFromFD(form, "date"); // "YYYY-MM-DD" from form
+        const chosenDateISO = dateStr ? new Date(dateStr).toISOString() : new Date().toISOString();
+
         payload = {
           title: getFromFD(form, "title"),
           content: getFromFD(form, "description"),
-          mood: getFromFD(form, "mood"),
+          mood: moodStr,
+          moods: moodStr ? [moodStr] : [],
           visibility: "private",
-          date: new Date().toISOString(),
+          date: chosenDateISO,                 // <-- user-chosen story date
           friendsInvolved: getAllFromFD(form, "friends[]"),
           photos: toArray(getFromFD(form, "mediaUrls")),
         };
       } else {
+        const moodStr = (form.mood || "").toString().trim();
+        const dateStr = (form.date || "").toString().trim(); // "YYYY-MM-DD" or ""
+        const chosenDateISO = dateStr ? new Date(dateStr).toISOString() : new Date().toISOString();
+
         payload = {
           title: form.title || "",
           content: form.description || "",
-          mood: form.mood || "",
+          mood: moodStr,
+          moods: moodStr ? [moodStr] : [],
           visibility: "private",
-          date: new Date().toISOString(),
+          date: chosenDateISO,                 // <-- user-chosen story date
           friendsInvolved: toArray(form.friends),
           photos: toArray(form.media),
         };
@@ -66,17 +76,15 @@ export default function AddStoryPage() {
         newStory.createdAt = new Date().toISOString();
       }
 
-      // ✅ Stash in extras list so AllStoriesPage can show it even after refresh
+      // cache so list shows immediately and survives refresh
       if (newStory && idOf(newStory)) {
         const extras = readJSON("stories:extras", []);
         const exists = extras.some((s) => String(idOf(s)) === String(idOf(newStory)));
         const next = exists ? extras : [newStory, ...extras];
         writeJSON("stories:extras", next);
-        // keep last seen too (handy for debugging)
         writeJSON("stories:lastNew", newStory);
       }
 
-      // Back to list with state for instant render
       navigate("/stories", { state: { newStory } });
     } catch (e) {
       setError(e?.message || "Failed to add story.");
@@ -86,17 +94,15 @@ export default function AddStoryPage() {
   }
 
   return (
-    <section className={styles.page}>
-      <div className={styles.headerRow}>
-        <h1 className={styles.title}>Add a new story, share a new memory.</h1>
-        <Link to="/stories" className={styles.backBtn}>
-          ← Back to all stories
-        </Link>
+    <section>
+      <div>
+        <h1>Add a new story, share a new memory.</h1>
+        <Link to="/stories">← Back to all stories</Link>
       </div>
 
-      {error && <p className={styles.error}>{error}</p>}
+      {error && <p>{error}</p>}
 
-      <div className={styles.card}>
+      <div>
         <StoryForm
           initialData={{}}
           heading="Add a new story, share a new memory."

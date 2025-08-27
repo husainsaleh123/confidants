@@ -16,6 +16,13 @@ export default function StoryForm({
   const [friends, setFriends] = useState(initialData.friends || []);
   const [mood, setMood] = useState(initialData.mood || "");
   const [files, setFiles] = useState(initialData.media || []);
+  // NEW: story date (YYYY-MM-DD). If you have initialData.date, prefill it.
+  const initialDateStr =
+    initialData.date
+      ? new Date(initialData.date).toISOString().slice(0, 10)
+      : "";
+  const [dateStr, setDateStr] = useState(initialDateStr);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -36,8 +43,9 @@ export default function StoryForm({
         fd.append("description", description);
         friends.forEach((id) => fd.append("friends[]", id));
         fd.append("mood", mood);
-        files.forEach((file) => fd.append("media", file)); // backend should accept multiple
-
+        // NEW: forward date as plain string "YYYY-MM-DD"
+        fd.append("date", dateStr || "");
+        files.forEach((file) => fd.append("media", file));
         await onSubmit?.(fd);
       } else {
         await onSubmit?.({
@@ -46,7 +54,9 @@ export default function StoryForm({
           description,
           friends,
           mood,
-          media: files, // might be existing URLs
+          // NEW: pass date string (the page will convert to ISO)
+          date: dateStr || "",
+          media: files,
         });
       }
     } catch (err) {
@@ -62,7 +72,7 @@ export default function StoryForm({
 
       <div className={styles.card}>
         <form className={styles.form} onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
-          {/* Add media row */}
+          {/* Add media */}
           <div className={styles.row}>
             <label className={styles.label}>Add media</label>
             <div className={styles.controlRight}>
@@ -92,6 +102,18 @@ export default function StoryForm({
               name="eventName"
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
+            />
+          </div>
+
+          {/* NEW: Date (user-chosen story date) */}
+          <div className={styles.row}>
+            <label className={styles.label}>Date</label>
+            <input
+              className={styles.input}
+              type="date"
+              name="date"
+              value={dateStr}
+              onChange={(e) => setDateStr(e.target.value)}
             />
           </div>
 

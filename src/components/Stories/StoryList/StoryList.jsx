@@ -2,94 +2,97 @@ import React, { useMemo } from "react";
 import StoryCard from "../StoryCard/StoryCard";
 
 export default function StoryList({
-  stories = [],      
-  filters = {},      
-  sortOrder = "recent", 
-  onCardClick,       
+  stories = [],
+  filters = {},
+  sortOrder = "recent", // "recent" (default) or "oldest"
+  onCardClick,
 }) {
-  
   const asDate = (d) => {
     if (!d) return null;
     const dt = new Date(d);
     return Number.isNaN(dt.getTime()) ? null : dt;
   };
 
-  // Apply filtering + sorting
   const filteredAndSorted = useMemo(() => {
-    // destructure possible filters
     const {
-      query,          
-      moods,         
-      friendIds,      
-      dateFrom,       
-      dateTo,         
-      favoritesOnly, 
+      query,
+      moods,          // array of mood keys to include
+      friendIds,      // array of friend IDs to match any
+      dateFrom,       // inclusive
+      dateTo,         // inclusive
+      favoritesOnly,  // boolean
     } = filters || {};
 
-    // normalize query
     const q = (query || "").trim().toLowerCase();
-    // normalize moods into a Set for quick lookup
     const moodSet = Array.isArray(moods) ? new Set(moods.filter(Boolean)) : null;
-    // normalize friends into a Set
     const friendSet = Array.isArray(friendIds) ? new Set(friendIds.filter(Boolean)) : null;
 
-    // normalize date filters
     const from = asDate(dateFrom);
     const to = asDate(dateTo);
 
-    // step 1: filter
     let result = (stories || []).filter((s) => {
-      // filter by query across title + content
+      // text search across title + content
       if (q) {
-        const hay = (s.title || "").toLowerCase() + " " + (s.content || "").toLowerCase();
+        const hay =
+          (s.title || "").toLowerCase() +
+          " " +
+          (s.content || "").toLowerCase();
         if (!hay.includes(q)) return false;
       }
 
-
-      // filter by friendsInvolved
-      if (friendSet && friendSet.size > 0) {
-        const ids = (s.friendsInvolved || []).map((f) => f?._id || f?.id).filter(Boolean);
-        const any = ids.some((id) => friendSet.has(id));
-        if (!any) return false;
+      // mood filter (accept if any of the story moods is in moodSet)
+      if (moodSet && moodSet.size > 0) {
+        const storyMoods = Array.isArray(s.moods)
+          ? s.moods.filter(Boolean)
+          : s.mood
+          ? [s.mood]
+          : [];
+        const hasAnyMood = storyMoods.some((m) => moodSet.has(m));
+        if (!hasAnyMood) return false;
       }
 
-      // filter by date range (story.date field, not createdAt)
+      // friend filter (any friend involved)
+      if (friendSet && friendSet.size > 0) {
+        const ids = (s.friendsInvolved || [])
+          .map((f) => f?._id || f?.id)
+          .filter(Boolean);
+        const hasAnyFriend = ids.some((id) => friendSet.has(id));
+        if (!hasAnyFriend) return false;
+      }
+
+      // date range on s.date (not createdAt)
       if (from || to) {
         const sd = asDate(s.date);
-        if (!sd) return false; // no date means exclude if filter is active
+        if (!sd) return false;
         if (from && sd < from) return false;
         if (to && sd > to) return false;
       }
 
-      // optional: favorites only
+      // favorites
       if (favoritesOnly && !s.favorite) return false;
 
-      return true; // keep this story
+      return true;
     });
 
-    // sorts the story based on createdAt
+    // sort by createdAt
     result.sort((a, b) => {
       const da = asDate(a.createdAt) || new Date(0);
       const db = asDate(b.createdAt) || new Date(0);
-      // "oldest": ascending (earlier dates first)
-      // "recent": descending (newest dates first)
-      return sortOrder === "oldest" ? da - db : db - da;
+      return sortOrder === "oldest" ? da - db : db - da; // recent = newest first
     });
 
     return result;
   }, [stories, filters, sortOrder]);
 
-  // fallback UI if nothing matches
   if (!filteredAndSorted.length) {
     return <p>No stories found.</p>;
   }
 
-  // render list of StoryCard components
   return (
     <div>
       {filteredAndSorted.map((story) => (
         <StoryCard
-          key={story._id || story.id} // mongoose uses _id
+          key={story._id || story.id}
           story={story}
           onClick={onCardClick}
         />

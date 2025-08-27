@@ -2,43 +2,36 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 export default function FriendSelector({
-  value = [],
+  value = [],            // array of friend IDs (strings)
   onChange,
-  friends,           // optional: preloaded friends
-  fetchFriends,      // optional: async loader
+  friends,               // optional: preloaded friends [{ _id, name, ... }]
+  fetchFriends,          // optional: async () => [{ _id, name, ... }]
 }) {
-  // full friend list to choose from
   const [allFriends, setAllFriends] = useState(friends || []);
-  // which friend is currently selected in the <select>
   const [currentId, setCurrentId] = useState("");
 
-  // keep internal list in sync if parent passes/updates `friends`
   useEffect(() => {
     if (Array.isArray(friends)) setAllFriends(friends);
   }, [friends]);
 
-  // initial load if no `friends` prop
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       try {
-        if (Array.isArray(friends) && friends.length) return; // already provided
+        if (Array.isArray(friends) && friends.length) return;
 
         let list = [];
         if (fetchFriends) {
           list = await fetchFriends();
         } else {
-          // fallback to your API route – adjust if your backend differs
-          const res = await fetch("/api/friends");
+          // TODO: change if your backend endpoint differs
+          const res = await fetch("/api/friends", { credentials: "include" });
           if (!res.ok) throw new Error("Failed to load friends");
           list = await res.json();
         }
-
         if (!cancelled) setAllFriends(Array.isArray(list) ? list : []);
-      } catch (e) {
-        // keep silent (or console.error if you want)
-        // console.error(e);
+      } catch {
         if (!cancelled) setAllFriends([]);
       }
     }
@@ -47,70 +40,67 @@ export default function FriendSelector({
     return () => { cancelled = true; };
   }, [fetchFriends, friends]);
 
-  // Build a map for easy lookups (id -> friend)
   const friendById = useMemo(() => {
     const map = new Map();
     (allFriends || []).forEach((f) => {
-      if (f && (f._id || f.id)) map.set(f._id || f.id, f);
+      const id = f?._id || f?.id;
+      if (id) map.set(String(id), f);
     });
     return map;
   }, [allFriends]);
 
-  // Add the currently selected friend ID to the list (if not already present)
-  function handleAdd() {
-    const id = currentId;
+  const handleAdd = () => {
+    const id = String(currentId || "");
     if (!id) return;
-    if (value.includes(id)) return; // already selected
-    onChange && onChange([...value, id]);
-    setCurrentId(""); // reset selection
-  }
+    if (value.map(String).includes(id)) return;
+    onChange && onChange([...(value || []), id]);
+    setCurrentId("");
+  };
 
-  // Remove friend by ID
-  function handleRemove(id) {
-    onChange && onChange(value.filter((v) => v !== id));
-  }
+  const handleRemove = (id) => {
+    const sid = String(id);
+    onChange && onChange((value || []).filter((v) => String(v) !== sid));
+  };
 
-  // Available options (exclude already selected ones)
   const availableOptions = useMemo(() => {
-    const selectedSet = new Set(value);
-    return (allFriends || []).filter((f) => !selectedSet.has(f._id || f.id));
+    const selected = new Set((value || []).map(String));
+    return (allFriends || []).filter((f) => !selected.has(String(f?._id || f?.id)));
   }, [allFriends, value]);
+
+  const friendLabel = (f) =>
+    f?.name ||
+    f?.fullName ||
+    [f?.firstName, f?.lastName].filter(Boolean).join(" ").trim() ||
+    f?.username ||
+    f?._id ||
+    f?.id ||
+    "Friend";
 
   return (
     <div>
-      {/* Selector row: dropdown + add button */}
       <div>
-        <select
-          value={currentId}
-          onChange={(e) => setCurrentId(e.target.value)}
-        >
+        <select value={currentId} onChange={(e) => setCurrentId(e.target.value)}>
           <option value="">-- Select a friend --</option>
           {availableOptions.map((f) => {
-            const id = f._id || f.id;
+            const id = f?._id || f?.id;
             return (
               <option key={id} value={id}>
-                {f.name || "Friend"}
+                {friendLabel(f)}
               </option>
             );
           })}
         </select>
-
-        <button type="button" onClick={handleAdd} disabled={!currentId}>
-          +
-        </button>
+        <button type="button" onClick={handleAdd} disabled={!currentId}>+</button>
       </div>
 
-      {/* Selected chips */}
-      {value.length > 0 && (
+      {(value || []).length > 0 && (
         <div>
-          {value.map((id) => {
-            const f = friendById.get(id);
+          {(value || []).map((id) => {
+            const f = friendById.get(String(id));
             return (
-              <span key={id}>
-                {f?.name || "Friend"}
-                <button type="button" onClick={() => handleRemove(id)} aria-label="remove friend">
-                  ⓧ
-                </button>
+              <span key={String(id)}>
+                {friendLabel(f)}
+                <button type="button" onClick={() => handleRemove(id)} aria-label="remove friend"> ⓧ </button>
               </span>
             );
           })}
