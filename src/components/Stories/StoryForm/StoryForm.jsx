@@ -3,6 +3,7 @@ import styles from "./StoryForm.module.scss";
 import PhotoUploader from "../PhotoUploader/PhotoUploader";
 import FriendSelector from "../FriendSelector/FriendSelector";
 import MoodSelector from "../MoodSelector/MoodSelector";
+import { getToken } from "../../../utilities/users-service";
 
 export default function StoryForm({
   initialData = {},
@@ -11,20 +12,25 @@ export default function StoryForm({
   onSubmit,
 }) {
   const [title, setTitle] = useState(initialData.title || "");
-  const [eventName, setEventName] = useState(initialData.eventName || "");
   const [description, setDescription] = useState(initialData.description || "");
   const [friends, setFriends] = useState(initialData.friends || []);
-  const [mood, setMood] = useState(initialData.mood || "");
+  const [moods, setMoods] = useState(initialData.moods || (initialData.mood ? [initialData.mood] : []));
   const [files, setFiles] = useState(initialData.media || []);
-  // NEW: story date (YYYY-MM-DD). If you have initialData.date, prefill it.
-  const initialDateStr =
-    initialData.date
-      ? new Date(initialData.date).toISOString().slice(0, 10)
-      : "";
-  const [dateStr, setDateStr] = useState(initialDateStr);
-
+  const [dateStr, setDateStr] = useState(
+    initialData.date ? new Date(initialData.date).toISOString().slice(0, 10) : ""
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const fetchFriends = async () => {
+    const token = getToken();
+    const res = await fetch("/api/friends", {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to load friends");
+    return res.json();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,22 +45,20 @@ export default function StoryForm({
       if (hasFiles) {
         const fd = new FormData();
         fd.append("title", title);
-        fd.append("eventName", eventName);
         fd.append("description", description);
         friends.forEach((id) => fd.append("friends[]", id));
-        fd.append("mood", mood);
-        // NEW: forward date as plain string "YYYY-MM-DD"
+        moods.forEach((m) => fd.append("moods[]", m));
+        fd.append("mood", moods[0] || "");
         fd.append("date", dateStr || "");
         files.forEach((file) => fd.append("media", file));
         await onSubmit?.(fd);
       } else {
         await onSubmit?.({
           title,
-          eventName,
           description,
           friends,
-          mood,
-          // NEW: pass date string (the page will convert to ISO)
+          moods,
+          mood: moods[0] || "",
           date: dateStr || "",
           media: files,
         });
@@ -93,19 +97,7 @@ export default function StoryForm({
             />
           </div>
 
-          {/* Event */}
-          <div className={styles.row}>
-            <label className={styles.label}>Event</label>
-            <input
-              className={styles.input}
-              type="text"
-              name="eventName"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-            />
-          </div>
-
-          {/* NEW: Date (user-chosen story date) */}
+          {/* Date */}
           <div className={styles.row}>
             <label className={styles.label}>Date</label>
             <input
@@ -133,15 +125,15 @@ export default function StoryForm({
           <div className={styles.row}>
             <label className={styles.label}>Select friends</label>
             <div className={styles.controlRight}>
-              <FriendSelector value={friends} onChange={setFriends} />
+              <FriendSelector value={friends} onChange={setFriends} fetchFriends={fetchFriends} />
             </div>
           </div>
 
-          {/* Mood */}
+          {/* Moods */}
           <div className={styles.row}>
             <label className={styles.label}>Select mood</label>
             <div className={styles.controlRight}>
-              <MoodSelector value={mood} onChange={setMood} />
+              <MoodSelector value={moods} onChange={setMoods} />
             </div>
           </div>
 

@@ -8,7 +8,6 @@ export default function AddStoryPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // utils
   const toArray = (v) =>
     Array.isArray(v)
       ? v
@@ -38,32 +37,28 @@ export default function AddStoryPage() {
       let payload;
 
       if (typeof FormData !== "undefined" && form instanceof FormData) {
-        const moodStr = getFromFD(form, "mood");
-        const dateStr = getFromFD(form, "date"); // "YYYY-MM-DD" from form
-        const chosenDateISO = dateStr ? new Date(dateStr).toISOString() : new Date().toISOString();
-
+        const moodsArr = getAllFromFD(form, "moods[]");
+        const dateStr = getFromFD(form, "date");
         payload = {
           title: getFromFD(form, "title"),
           content: getFromFD(form, "description"),
-          mood: moodStr,
-          moods: moodStr ? [moodStr] : [],
+          mood: moodsArr[0] || "",
+          moods: moodsArr,
           visibility: "private",
-          date: chosenDateISO,                 // <-- user-chosen story date
+          date: dateStr ? new Date(dateStr).toISOString() : new Date().toISOString(),
           friendsInvolved: getAllFromFD(form, "friends[]"),
           photos: toArray(getFromFD(form, "mediaUrls")),
         };
       } else {
-        const moodStr = (form.mood || "").toString().trim();
-        const dateStr = (form.date || "").toString().trim(); // "YYYY-MM-DD" or ""
-        const chosenDateISO = dateStr ? new Date(dateStr).toISOString() : new Date().toISOString();
-
+        const moodsArr = toArray(form.moods);
+        const dateStr = (form.date || "").toString().trim();
         payload = {
           title: form.title || "",
           content: form.description || "",
-          mood: moodStr,
-          moods: moodStr ? [moodStr] : [],
+          mood: (moodsArr[0] || "").toString(),
+          moods: moodsArr,
           visibility: "private",
-          date: chosenDateISO,                 // <-- user-chosen story date
+          date: dateStr ? new Date(dateStr).toISOString() : new Date().toISOString(),
           friendsInvolved: toArray(form.friends),
           photos: toArray(form.media),
         };
@@ -76,7 +71,6 @@ export default function AddStoryPage() {
         newStory.createdAt = new Date().toISOString();
       }
 
-      // cache so list shows immediately and survives refresh
       if (newStory && idOf(newStory)) {
         const extras = readJSON("stories:extras", []);
         const exists = extras.some((s) => String(idOf(s)) === String(idOf(newStory)));

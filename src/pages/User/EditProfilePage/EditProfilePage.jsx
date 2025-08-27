@@ -1,42 +1,57 @@
-// src/pages/User/ProfilePage/EditProfilePage.jsx
+// src/pages/User/EditProfilePage/EditProfilePage.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import EditProfileForm from "../../../components/User/EditProfileForm/EditProfileForm";
+import { getToken } from "../../../utilities/users-service";
 
 export default function EditProfilePage({ user, setUser }) {
   const navigate = useNavigate();
-
-  // Track submitting/error like your class examples
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
+  const userId = user?._id || user?.id;
 
-  // The form already appends: name, email, (optional) password, and (optional) avatar
-  async function handleSubmit(fd) {
+  async function handleSubmit(formData) {
     try {
       setSubmitting(true);
       setError("");
 
-      // Below, we'll use /api/users/. 
-      const res = await fetch("/api/users", {
+      // Ensure we have FormData (EditProfileForm should already send it)
+      const fd =
+        formData instanceof FormData
+          ? formData
+          : (() => {
+              const f = new FormData();
+              Object.entries(formData || {}).forEach(([k, v]) => f.append(k, v));
+              return f;
+            })();
+
+      // Auth header (do NOT set Content-Type when sending FormData)
+      const token = getToken();
+      const res = await fetch(`/api/users/${encodeURIComponent(userId || "me")}`, {
         method: "PUT",
-        body: fd, // FormData
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        body: fd,
       });
 
       if (!res.ok) {
-        // surfaces any error text from the server
-        const msg = await res.text();
-        throw new Error(msg || "Failed to update profile");
+        // Try to show server-provided error
+        let msg = "";
+        try {
+          msg = await res.text();
+        } catch {}
+        throw new Error(msg || `Failed to update profile (HTTP ${res.status})`);
       }
 
-      // Expect the updated user back (with profilePic resolved server-side)
-      const updated = await res.json();
+      const data = await res.json();
+      const updatedUser = data?.user ?? data;
 
-      // Update app-level user state
-      if (setUser) setUser(updated.user || updated);
+      // Reflect changes in app state
+      if (setUser && updatedUser) setUser(updatedUser);
 
-      // Navigate wherever you want post-save (e.g., back to profile)
-      navigate("/profile/:id");
+      // Back to profile page (real id, not "/profile/:id")
+      if (userId) navigate(`/profile/${userId}`);
+      else navigate("/profile/me");
     } catch (e) {
       setError(e?.message || "Update failed");
     } finally {
@@ -46,23 +61,23 @@ export default function EditProfilePage({ user, setUser }) {
 
   return (
     <section>
-      {/* Header row (title + back link), like your class structure */}
       <div>
         <h1>Edit your profile, {user?.name || "User"}.</h1>
-        <Link to="/profile/:id">  {/* Links to profile page */}
-          ← Back to profile
-        </Link>
+        {userId ? (
+          <Link to={`/profile/${userId}`}>← Back to profile</Link>
+        ) : (
+          <Link to="/profile">← Back to profile</Link>
+        )}
       </div>
 
-      {/* Any error from save */}
       {error && <p>{error}</p>}
 
-      {/* Main card: to render the form's data*/}
       <div>
         <EditProfileForm
           user={user}
           setUser={setUser}
           onSubmit={handleSubmit}
+          submitLabel={submitting ? "Saving..." : "Save changes"}
         />
       </div>
     </section>

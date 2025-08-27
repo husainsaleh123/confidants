@@ -1,5 +1,5 @@
-// src/components/Stories/FriendSelector.jsx
 import React, { useEffect, useMemo, useState } from "react";
+import { getToken } from "../../../utilities/users-service";
 
 export default function FriendSelector({
   value = [],            // array of friend IDs (strings)
@@ -10,6 +10,17 @@ export default function FriendSelector({
   const [allFriends, setAllFriends] = useState(friends || []);
   const [currentId, setCurrentId] = useState("");
 
+  // default authorized fetcher if none passed
+  const authedFetchFriends = async () => {
+    const token = getToken();
+    const res = await fetch("/api/friends", {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to load friends");
+    return res.json();
+  };
+
   useEffect(() => {
     if (Array.isArray(friends)) setAllFriends(friends);
   }, [friends]);
@@ -19,17 +30,10 @@ export default function FriendSelector({
 
     async function load() {
       try {
+        // if already provided
         if (Array.isArray(friends) && friends.length) return;
 
-        let list = [];
-        if (fetchFriends) {
-          list = await fetchFriends();
-        } else {
-          // TODO: change if your backend endpoint differs
-          const res = await fetch("/api/friends", { credentials: "include" });
-          if (!res.ok) throw new Error("Failed to load friends");
-          list = await res.json();
-        }
+        const list = (await (fetchFriends || authedFetchFriends)()) || [];
         if (!cancelled) setAllFriends(Array.isArray(list) ? list : []);
       } catch {
         if (!cancelled) setAllFriends([]);
@@ -52,7 +56,8 @@ export default function FriendSelector({
   const handleAdd = () => {
     const id = String(currentId || "");
     if (!id) return;
-    if (value.map(String).includes(id)) return;
+    const set = new Set((value || []).map(String));
+    if (set.has(id)) return;
     onChange && onChange([...(value || []), id]);
     setCurrentId("");
   };
@@ -98,7 +103,7 @@ export default function FriendSelector({
           {(value || []).map((id) => {
             const f = friendById.get(String(id));
             return (
-              <span key={String(id)}>
+              <span key={String(id)} style={{ marginRight: 6 }}>
                 {friendLabel(f)}
                 <button type="button" onClick={() => handleRemove(id)} aria-label="remove friend"> ⓧ </button>
               </span>

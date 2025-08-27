@@ -1,19 +1,18 @@
 import React, { useMemo, useState } from "react";
 
-// single-select mood (string) with chip UI and a "+" button (like your mockup)
 const DEFAULT_MOODS = [
   { key: "happy",     label: "Happy 😊" },
   { key: "sad",       label: "Sad 😢" },
   { key: "excited",   label: "Excited 🤩" },
   { key: "nostalgic", label: "Nostalgic 🕰️" },
-  { key: "angry",     label: "Angry 😠" },
+  { key: "angry",     label: "Angry 🧿" },
   { key: "chill",     label: "Chill 😎" },
   { key: "grateful",  label: "Grateful 🙏" },
   { key: "tired",     label: "Tired 🥱" },
 ];
 
 export default function MoodSelector({
-  value = "",                 // string mood key
+  value = [],                 // array of mood keys
   onChange,
   moods = DEFAULT_MOODS,
 }) {
@@ -27,11 +26,16 @@ export default function MoodSelector({
 
   const addSelected = () => {
     if (!currentKey) return;
-    onChange && onChange(currentKey); // store single mood as string
+    const set = new Set((value || []).filter(Boolean));
+    if (set.has(currentKey)) return;
+    const next = [...set, currentKey];
+    onChange && onChange(Array.from(next));
     setCurrentKey("");
   };
 
-  const clearMood = () => onChange && onChange("");
+  const removeMood = (k) => {
+    onChange && onChange((value || []).filter((x) => x !== k));
+  };
 
   return (
     <div>
@@ -47,16 +51,21 @@ export default function MoodSelector({
         <button type="button" onClick={addSelected} disabled={!currentKey}>+</button>
       </div>
 
-      {!!value && (
-        <div>
-          <span>
-            {moodLabelByKey.get(value) || value}
-            <button type="button" onClick={clearMood} aria-label="remove mood"> ⓧ </button>
-          </span>
+      {(value || []).length > 0 && (
+        <div style={{ marginTop: 6 }}>
+          {(value || []).map((k) => (
+            <span key={k} style={{ marginRight: 6 }}>
+              {moodLabelByKey.get(k) || k}
+              <button type="button" onClick={() => removeMood(k)} aria-label="remove mood"> ⓧ </button>
+            </span>
+          ))}
         </div>
       )}
-      {/* hidden mirror so FormData always contains a plain string 'mood' */}
-      <input type="hidden" name="mood" value={value || ""} />
+
+      {/* hidden mirrors so FormData contains 'moods[]' */}
+      {(value || []).map((k, i) => (
+        <input key={`${k}-${i}`} type="hidden" name="moods[]" value={k} />
+      ))}
     </div>
   );
 }

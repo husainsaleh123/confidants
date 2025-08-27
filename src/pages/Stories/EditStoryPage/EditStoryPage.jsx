@@ -17,31 +17,17 @@ export default function EditStoryPage() {
 
   useEffect(() => {
     let cancelled = false;
-
     async function load() {
       try {
-        if (story) {
-          setLoading(false);
-          return;
-        }
-
-        const readJSON = (k) => {
-          try {
-            const raw = localStorage.getItem(k);
-            return raw ? JSON.parse(raw) : null;
-          } catch {
-            return null;
-          }
-        };
+        if (story) { setLoading(false); return; }
+        const readJSON = (k) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; } };
         const caches = [
           ...(readJSON("stories:extras") || []),
           ...(readJSON("stories:lastSnapshot") || []),
           ...(readJSON("stories:lastNew") ? [readJSON("stories:lastNew")] : []),
         ];
         const fromCache = caches.find((s) => String(idOf(s)) === String(id));
-        if (fromCache) {
-          if (!cancelled) setStory(fromCache);
-        }
+        if (fromCache && !cancelled) setStory(fromCache);
 
         setLoading(true);
         const s = await getStory(id);
@@ -52,27 +38,24 @@ export default function EditStoryPage() {
         if (!cancelled) setLoading(false);
       }
     }
-
     load();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [id, story]);
 
-  const initialData = useMemo(() => {
-    if (!story) return {};
-    return {
-      title: story.title || "",
-      eventName: story.eventName || "",
-      description: story.content || "",
-      friends: (story.friendsInvolved || [])
-        .map((f) => f?._id || f?.id || f)
-        .filter(Boolean),
-      mood: story.mood || "",
-      media: story.photos || [],
-      date: story.date || "",
-    };
-  }, [story]);
+// inside useMemo
+const initialData = useMemo(() => {
+  if (!story) return {};
+  return {
+    title: story.title || "",
+    description: story.content || "",
+    friends: (story.friendsInvolved || []).map((f) => f?._id || f?.id || f).filter(Boolean),
+    moods: Array.isArray(story.moods) ? story.moods : (story.mood ? [story.mood] : []),
+    mood: story.mood || "",
+    media: story.photos || [],
+    date: story.date || "",
+  };
+}, [story]);
+
 
   async function handleSubmit(form) {
     try {
@@ -81,33 +64,31 @@ export default function EditStoryPage() {
       const getFromFD = (fd, key) => (fd.get(key) ?? "").toString();
       const getAllFromFD = (fd, key) => fd.getAll(key).map(String);
       const toArray = (v) =>
-        Array.isArray(v)
-          ? v
-          : v == null || v === ""
-          ? []
-          : String(v).split(",").map((s) => s.trim()).filter(Boolean);
+        Array.isArray(v) ? v : v == null || v === "" ? [] : String(v).split(",").map((s) => s.trim()).filter(Boolean);
 
       let payload;
 
       if (typeof FormData !== "undefined" && form instanceof FormData) {
+        const moodsArr = getAllFromFD(form, "moods[]");
         const dateStr = getFromFD(form, "date");
         payload = {
           title: getFromFD(form, "title"),
           content: getFromFD(form, "description"),
-          mood: getFromFD(form, "mood"),
+          mood: moodsArr[0] || "",
+          moods: moodsArr,
           date: dateStr ? new Date(dateStr).toISOString() : story?.date || new Date().toISOString(),
           friendsInvolved: getAllFromFD(form, "friends[]"),
-          photos: toArray(getFromFD(form, "mediaUrls")).length
-            ? toArray(getFromFD(form, "mediaUrls"))
-            : story?.photos || [],
+          photos: toArray(getFromFD(form, "mediaUrls")).length ? toArray(getFromFD(form, "mediaUrls")) : story?.photos || [],
           visibility: story?.visibility || "private",
         };
       } else {
+        const moodsArr = toArray(form.moods);
         const dateStr = (form.date || "").toString().trim();
         payload = {
           title: form.title || "",
           content: form.description || "",
-          mood: form.mood || "",
+          mood: (moodsArr[0] || "").toString(),
+          moods: moodsArr,
           date: dateStr ? new Date(dateStr).toISOString() : story?.date || new Date().toISOString(),
           friendsInvolved: toArray(form.friends),
           photos: toArray(form.media).length ? toArray(form.media) : story?.photos || [],
@@ -120,20 +101,8 @@ export default function EditStoryPage() {
       updatedStory._id = idOf(updatedStory) || idOf(story) || id;
       if (!updatedStory.createdAt && story?.createdAt) updatedStory.createdAt = story.createdAt;
 
-      const readJSON = (k, fallback) => {
-        try {
-          const raw = localStorage.getItem(k);
-          return raw ? JSON.parse(raw) : fallback;
-        } catch {
-          return fallback;
-        }
-      };
-      const writeJSON = (k, v) => {
-        try {
-          localStorage.setItem(k, JSON.stringify(v));
-        } catch {}
-      };
-
+      const readJSON = (k, fb) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fb; } catch { return fb; } };
+      const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
       const replaceIn = (arr) =>
         (arr || []).map((x) => (String(idOf(x)) === String(idOf(updatedStory)) ? { ...x, ...updatedStory } : x));
 
