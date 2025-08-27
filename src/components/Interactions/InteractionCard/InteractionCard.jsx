@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import styles from "./InteractionCard.module.scss";
+
 
 export default function InteractionCard({ item }) {
   const nav = useNavigate();

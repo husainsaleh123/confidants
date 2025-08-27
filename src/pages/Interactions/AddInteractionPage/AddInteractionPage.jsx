@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import InteractionForm from "../../../components/Interactions/InteractionForm/InteractionForm";
 import { createInteraction } from "../../../utilities/interaction-api";
+import styles from "./AddInteractionPage.module.scss";
+
 
 export default function AddInteractionPage() {
   const nav = useNavigate();
