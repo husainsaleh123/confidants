@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as usersService from '../../../utilities/users-service';
-
+import styles from "./LoginForm.module.scss";
 export default function LoginForm({ setUser }) {
   const [credentials, setCredentials] = useState({
     email: '',
@@ -28,17 +28,38 @@ export default function LoginForm({ setUser }) {
   }
 
   return (
-    <div>
-      <div className="form-container">
-        <form autoComplete="off" onSubmit={handleSubmit}>
-          <label>Email</label>
-          <input type="text" name="email" value={credentials.email} onChange={handleChange} required />
-          <label>Password</label>
-          <input type="password" name="password" value={credentials.password} onChange={handleChange} required />
-          <button type="submit">LOG IN</button>
+     <div className={styles.wrap}>
+      <div className={styles.formContainer}>
+        <form autoComplete="off" onSubmit={handleSubmit} className={styles.form}>
+          <label className={styles.label}>Email</label>
+          <input
+            className={styles.input}
+            type="email"
+            name="email"
+            value={credentials.email}
+            onChange={handleChange}
+            required
+          />
+
+          <label className={styles.label}>Password</label>
+          <input
+            className={styles.input}
+            type="password"
+            name="password"
+            value={credentials.password}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit" className={styles.submitBtn}>
+            LOG IN
+          </button>
         </form>
       </div>
-      <p className="error-message">&nbsp;{error}</p>
+
+      <p className={styles.errorMessage} aria-live="polite">
+        &nbsp;{error}
+      </p>
     </div>
   );
 }
