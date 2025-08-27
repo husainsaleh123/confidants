@@ -78,3 +78,30 @@
   text-align: center;
   margin-top: 8px;
 }
+
+.actions {
+  width: 100%;                 /* let the child take 100% */
+  display: block;              /* a normal block is fine */
+  margin-top: 12px;
+}
+
+.submitBtn {
+  width: 100%;                 /* full width */
+  display: block;              /* stretch across the .actions width */
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: #4f46e5;         /* purple */
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.submitBtn:hover:not(:disabled) { background: #4338ca; }
+.submitBtn:disabled { opacity: .7; cursor: not-allowed; }
+
+.uploadPhoto{
+  
+}

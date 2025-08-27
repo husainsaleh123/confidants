@@ -75,7 +75,7 @@ export default function StoryForm({
       <h2 className={styles.pageTitle}>{heading}</h2>
 
       <div className={styles.card}>
-        <form className={styles.form} onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
+        <form className={styles.form} onSubmit={handleSubmit} autoComplete="off">
           {/* Add media */}
           <div className={styles.row}>
             <label className={styles.label}>Add media</label>

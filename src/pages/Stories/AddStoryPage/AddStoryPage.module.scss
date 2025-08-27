@@ -1,53 +1,55 @@
 .page {
-  /* center everything in the viewport column */
+  min-height: 100vh;              /* take full height */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 16px 48px;
+  justify-content: flex-start;    /* top align, change to center for full vertical centering */
+  padding: 40px 16px;
+  background: #fafafa;
 }
 
 .header {
   width: 100%;
-  max-width: 820px; /* matches the StoryForm card width */
-  margin: 0 auto 12px;
-  display: grid;
-  grid-template-rows: auto auto;
-  row-gap: 8px;
+  max-width: 720px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .backLink {
-  justify-self: start;
   font-size: 0.95rem;
   color: #6b6f76;
   text-decoration: none;
-  &:hover { text-decoration: underline; }
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .title {
-  justify-self: center;
-  text-align: center;
-  font-size: clamp(1.25rem, 2.8vw, 1.75rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   line-height: 1.25;
   color: #1f2a37;
   font-weight: 700;
   margin: 0;
+  text-align: center;
 }
 
 .error {
   width: 100%;
-  max-width: 820px;
+  max-width: 720px;
   background: #fff4f4;
   border: 1px solid #ffd3d3;
   color: #b42318;
   padding: 10px 12px;
-  border-radius: 10px;
-  margin: 12px auto 20px;
+  border-radius: 8px;
+  margin: 12px 0 20px;
   text-align: center;
 }
 
-/* This creates the centered column that the StoryForm card sits inside */
 .formShell {
   width: 100%;
-  max-width: 820px;
+  max-width: 720px;
   margin: 0 auto;
 }
+

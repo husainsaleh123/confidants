@@ -88,7 +88,7 @@ export default function AddStoryPage() {
     <section className={styles.page}>
       <div className={styles.header}>
         <Link to="/stories" className={styles.backLink}>← Back to all stories</Link>
-        <h1 className={styles.title}>Add a new story, share a new memory.</h1>
+        {/* <h1 className={styles.title}>Add a new story, share a new memory.</h1> */}
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
