@@ -29,6 +29,7 @@ app.use('/api/events', checkToken, ensureLoggedIn, eventRoutes);
 app.use('/api/friends', checkToken, ensureLoggedIn, friendRoutes);
 app.use('/api/interactions', checkToken, ensureLoggedIn, interactionRoutes);
 app.use('/api/stories', checkToken, ensureLoggedIn, storyRoutes);
+app.use('/uploads', express.static(path.resolve('uploads')));
 
 // Determine which directory to serve static files from
 const staticDir = process.env.NODE_ENV === 'production' ? 'dist' : 'public';

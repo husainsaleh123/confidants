@@ -26,6 +26,7 @@ async function userIndex(req, res) {
         res.status(400).json({ msg: e.message });
     }
 }
+
 // POST /api/stories
 async function create(req, res) {
     try {

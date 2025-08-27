@@ -1,78 +1,87 @@
 // src/components/Stories/PhotoUploader/PhotoUploader.jsx
 import React, { useRef, useState, useEffect } from "react";
 
-export default function PhotoUploader({ value, onChange, className = "" }) {
-  // ref so we can trigger the hidden <input type="file" />
+export default function PhotoUploader({
+  files: filesProp,       // CHANGED: preferred prop (array of File or URLs)
+  value,                   // backward-compat: single value
+  onChange,
+  className = ""
+}) {
   const fileInputRef = useRef(null);
 
-  // local state to keep track of the preview image (URL or File preview)
-  const [preview, setPreview] = useState(value || null);
+  // CHANGED: normalize into an array of items (File or string URL)
+  const normalize = (val) => {
+    if (Array.isArray(val)) return val;
+    if (val == null) return [];
+    return [val];
+  };
 
-  // when the incoming `value` prop changes (like editing an existing profile),
-  // update the preview
+  const [files, setFiles] = useState(normalize(filesProp ?? value));
+  const [previews, setPreviews] = useState([]);
+
   useEffect(() => {
-    setPreview(value || null);
-  }, [value]);
+    setFiles(normalize(filesProp ?? value));
+  }, [filesProp, value]);
 
-  // Handle when user selects a file
+  // CHANGED: build preview URLs for any File entries
+  useEffect(() => {
+    const urls = files.map((f) => (f instanceof File ? URL.createObjectURL(f) : String(f)));
+    setPreviews(urls);
+    // revoke previous object URLs when files change
+    return () => {
+      urls.forEach((u, i) => {
+        if (files[i] instanceof File) URL.revokeObjectURL(u);
+      });
+    };
+  }, [files]);
+
   const handleFileChange = (e) => {
-    const file = e.target.files?.[0]; // only take the first file
-    if (file) {
-      // generate a temporary preview URL from the file
-      setPreview(URL.createObjectURL(file));
-      // inform parent component about the new file
-      onChange && onChange(file);
+    const list = Array.from(e.target.files || []);
+    const next = list.length ? list : [];
+    setFiles(next);
+    onChange && onChange(next); // CHANGED: return array
+  };
+
+  const handleRemoveIndex = (idx) => {
+    const next = files.filter((_, i) => i !== idx);
+    setFiles(next);
+    onChange && onChange(next);
+    if (fileInputRef.current && next.length === 0) {
+      fileInputRef.current.value = "";
     }
   };
 
-  // Handle remove/reset picture
-  const handleRemove = () => {
-    setPreview(null); // clear preview
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // clear the <input> value
-    }
-    // inform parent that there's no picture anymore
-    onChange && onChange(null);
-  };
+  const openPicker = () => fileInputRef.current?.click();
 
   return (
     <div>
-      {/* If there is a preview, show the image + buttons to change/remove */}
-      {preview ? (
-        <div>
-          <img
-            src={preview}
-            alt="Profile preview"
-            width={120}
-            height={120}
-          />
-          <div>
-            {/* Trigger file picker again */}
-            <button type="button" className={className} onClick={() => fileInputRef.current?.click()}>
-              Change photo
-            </button>
-            {/* Remove/reset */}
-            <button type="button" className={className} onClick={handleRemove}>
-              Remove photo
-            </button>
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
+        {previews.map((src, i) => (
+          <div key={i} style={{ position: "relative" }}>
+            <img src={src} alt={`preview ${i+1}`} width={120} height={120} />
+            <div>
+              <button type="button" className={className} onClick={() => handleRemoveIndex(i)}>
+                Remove
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        // If no preview, show "Upload photo" button
-        <div>
-         <button type="button" className={className} onClick={() => fileInputRef.current?.click()}>
-            Upload photo
-          </button>
-        </div>
-      )}
+        ))}
+      </div>
 
-      {/* Hidden file input – real uploader element */}
+      <div>
+        <button type="button" className={className} onClick={openPicker}>
+          {previews.length ? "Add / Replace Photos" : "Upload Photos"}
+        </button>
+      </div>
+
+      {/* CHANGED: allow multiple file selection */}
       <input
         type="file"
-        accept="image/*"                // restrict to images only
-        ref={fileInputRef}              // assign ref so we can trigger click programmatically
-        style={{ display: "none" }}     // hide it (we use our custom buttons instead)
-        onChange={handleFileChange}     // when user picks a file
+        accept="image/*"
+        multiple
+        ref={fileInputRef}
+        style={{ display: "none" }}
+        onChange={handleFileChange}
       />
     </div>
   );
