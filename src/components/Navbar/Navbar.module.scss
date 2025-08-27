@@ -1,0 +1,42 @@
+$brand: #2efff1;
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1.25rem;
+  background: blue;
+  border-bottom: 1px solid #e5e7eb;
+}
+.navbar__logo {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 80px;   
+    width: auto;
+    display: block;
+  }
+}
+
+.navbar__links {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.navbar__link {
+  font-weight: 600;
+  color: ghostwhite;
+  text-decoration: none;
+  transition: color .2s ease, border-color .2s ease;
+
+  &:hover {
+    color: $brand;
+  }
+}
+
+.active {
+  color: $brand;
+  border-bottom: 2px solid $brand;
+  padding-bottom: .2rem;
+}
