@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import styles from "./ProfilePage.module.scss";
 
 export default function ProfilePage({ user }) {
   const userId = user?._id || user?.id;
@@ -26,34 +27,42 @@ export default function ProfilePage({ user }) {
   const avatarUrl = normalizeAvatar(avatarRaw);
 
   return (
-    <section>
-      <h1>Welcome to your profile page!</h1>
+    <section className={styles.profilePage}>
+      <h1 className={styles.pageTitle}>
+        Welcome to your profile page, {name.split(" ")[0]}!
+      </h1>
 
-      <div>
-        <div>
+      <div className={styles.card}>
+        <div className={styles.avatar}>
           {avatarUrl ? (
-            <img src={avatarUrl} alt={`${name}'s avatar`} width={64} height={64} />
+            <img src={avatarUrl} alt={`${name}'s avatar`} />
           ) : (
-            <div aria-label="avatar placeholder" />
+            <div className={styles.avatarPlaceholder} aria-label="avatar placeholder" />
           )}
         </div>
 
-        <div>
+        <div className={styles.info}>
           <h2>{name}</h2>
           {email && <p>{email}</p>}
         </div>
 
-        <div>
+        <div className={styles.actions}>
           <Link to="/friends">
-            <button type="button">Friends</button>
+            <button type="button" className={`${styles.btn} ${styles.friendsBtn}`}>
+              Friends
+            </button>
           </Link>
 
           {userId ? (
             <Link to={`/profile/${userId}/edit`}>
-              <button type="button">Edit</button>
+              <button type="button" className={`${styles.btn} ${styles.editBtn}`}>
+                Edit
+              </button>
             </Link>
           ) : (
-            <button type="button" disabled>Edit</button>
+            <button type="button" className={styles.btn} disabled>
+              Edit
+            </button>
           )}
         </div>
       </div>
