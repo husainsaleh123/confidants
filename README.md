@@ -2,11 +2,11 @@
 
 Confidants is a modern web app for managing your friendships, interactions, stories, and events. It features a clean, responsive UI and smooth navigation, built with React and Vite.
 
-## Overview
+## 📃 Overview
 
 Confidants helps users track their social connections, log interactions, share stories, and set reminders for important events. The app is designed for privacy, ease of use, and a fun, engaging experience.
 
-## Features
+## ⚙ Features
 
 - **Authentication:** Sign up, log in, and manage your profile (with avatar upload).
 - **Friends:** Add, edit, view, and favorite friends. Search and tag friends.
@@ -16,11 +16,11 @@ Confidants helps users track their social connections, log interactions, share s
 - **Modern UI:** Responsive design, modular components, and SCSS styling.
 
 
-## Sign Up Page
+## 🔒 Sign Up Page
 
 ![](https://i.imgur.com/zfQ3MDH.png)
 
-## Tech Stack
+## 👩‍💻 Tech Stack
 
 - React (functional and class components)
 - Vite (fast development/build)
@@ -28,12 +28,12 @@ Confidants helps users track their social connections, log interactions, share s
 - Node.js/Express (API server)
 - MongoDB (database)
 
-## Additionals
+## ➕ Additionals
 - [Team Trello ](https://trello.com/b/sifnZPs9/group-3-team-project)
 - [Figma](https://www.figma.com/design/m3PADnv0RCWQnASIjI8Tvz/Untitled?node-id=0-1&t=2jOqmfBh2cISwJFF-1)
 
 
-## Project Structure
+## 💎 Project Structure
 
 ```
 confidants/
@@ -122,14 +122,14 @@ confidants/
 
 ---
 
-### Created by
+### 🤼 Credits
 
-   - Husain Alnahash
-   - Ali Jawad
-   - Mohammed Ali Ahmed Jaber
-   - Mahmood Kadhem
-   - Husain Folath 
-   - Aqeel Muslim  
+   - __Husain Alnahash__
+   - __Ali Jawad__
+   - __Mohammed Ali Ahmed Jaber__
+   - __Mahmood Kadhem__
+   - __Husain Folath__ 
+   - __Aqeel Muslim__  
    
 
 Confidants © All rights reserved 2025.
