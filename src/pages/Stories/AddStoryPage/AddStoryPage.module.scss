@@ -1,44 +1,53 @@
 .page {
-  max-width: 920px;
-  margin: 0 auto;
+  /* center everything in the viewport column */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 24px 16px 48px;
 }
 
-.headerRow {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
+.header {
+  width: 100%;
+  max-width: 820px; /* matches the StoryForm card width */
+  margin: 0 auto 12px;
+  display: grid;
+  grid-template-rows: auto auto;
+  row-gap: 8px;
 }
 
 .backLink {
-  align-self: flex-start;
+  justify-self: start;
   font-size: 0.95rem;
   color: #6b6f76;
   text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
+  &:hover { text-decoration: underline; }
 }
 
 .title {
+  justify-self: center;
+  text-align: center;
   font-size: clamp(1.25rem, 2.8vw, 1.75rem);
   line-height: 1.25;
   color: #1f2a37;
-  margin: 0;
   font-weight: 700;
+  margin: 0;
 }
 
 .error {
+  width: 100%;
+  max-width: 820px;
   background: #fff4f4;
   border: 1px solid #ffd3d3;
   color: #b42318;
   padding: 10px 12px;
   border-radius: 10px;
-  margin: 12px 0 20px;
+  margin: 12px auto 20px;
+  text-align: center;
 }
 
-.formWrap {
-  display: block; /* StoryForm renders its own card */
+/* This creates the centered column that the StoryForm card sits inside */
+.formShell {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
 }
