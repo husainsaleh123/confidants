@@ -1,74 +1,77 @@
-/* Same visual language as AddFriendPage */
-$brand: #2E46FF;
 
 .page {
-  max-width: 940px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
+  gap: 1.5rem;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 2rem;
-  display: grid;
-  gap: 1rem;
+  font-family: "Inter", sans-serif;
 }
 
 .headerRow {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
 }
 
 .title {
-  font-size: 1.6rem;
-  font-weight: 800;
+  margin: 16px 0 24px;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1.8rem;
+  color: #222;
 }
 
 .backBtn {
-  border: 1.5px solid $brand;
-  color: $brand;
-  background: #fff;
-  border-radius: 9999px;
-  padding: 0.55rem 0.9rem;
+  font-size: 0.9rem;
+  color: #007bff;
   text-decoration: none;
-  font-weight: 800;
-  transition: background 0.2s, color 0.2s;
+  transition: color 0.2s;
 
   &:hover {
-    background: $brand;
-    color: #fff;
+    color: #0056b3;
+    text-decoration: underline;
   }
 }
 
-.muted {
-  color: #6b7280;
-}
-
 .error {
-  color: #ef4444;
-  background: #fee2e2;
-  border: 1px solid #fecaca;
+  background: #ffe6e6;
+  color: #cc0000;
   padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  border: 1px solid #ffb3b3;
 }
 
 .card {
-  background: #fff;
-  border: 1px solid #eef0f4;
-  border-radius: 18px;
-  padding: 1.1rem;
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.02),
-    0 10px 24px rgba(17, 24, 39, 0.06);
-  display: grid;
-  gap: 1rem;
+  width: 100%;
+  max-width: 720px;
+  border-radius: 8px;
+  background: #f4f4f4;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .actions {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
 
   button {
-    border-radius: 9999px;
-    padding: 0.65rem 1.25rem;
-    font-weight: 700;
-  }
-}
+     width: 100%;                 /* full width */
+  display: block;              /* stretch across the .actions width */
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: blue;         /* purple */
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s ease;
+}}

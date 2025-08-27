@@ -84,9 +84,7 @@ export default function EditEventPage() {
         <h1 className={styles.title}>
           {event ? `Edit ${event.title}` : "Edit Event"}
         </h1>
-        <Link to={`/events/${id}`} className={styles.backBtn}>
-          ← Back
-        </Link>
+        
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
