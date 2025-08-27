@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { getToken } from "../../../utilities/users-service";
 
 export default function FriendSelector({
-  value = [],            // array of friend IDs (strings)
+  value = [],           
   onChange,
-  friends,               // optional: preloaded friends [{ _id, name, ... }]
-  fetchFriends,          // optional: async () => [{ _id, name, ... }]
+  friends,               
+  fetchFriends,          
 }) {
   const [allFriends, setAllFriends] = useState(friends || []);
   const [currentId, setCurrentId] = useState("");

@@ -10,50 +10,29 @@ export default function EditProfilePage({ user, setUser }) {
 
   const userId = user?._id || user?.id;
 
+  // Hit the backend directly (bypass Vite proxy / port drift)
+  const API_BASE = `${window.location.protocol}//${window.location.hostname}:3000`;
+
   const candidates = (id) => {
     const idPart = encodeURIComponent(id || "");
-    // common bases (self + by-id + “update” flavors)
     const bases = [
-      "/api/users/me",
-      id ? `/api/users/${idPart}` : null,
-      "/api/users/update",
-      "/api/users/profile",
-      "/api/profile/me",
-      id ? `/api/profile/${idPart}` : null,
-      "/api/user/me",
-      id ? `/api/user/${idPart}` : null,
-      "/api/me/profile",
-      "/api/account/me",
+      `${API_BASE}/api/users/me`,
+      id ? `${API_BASE}/api/users/${idPart}` : null,
+      `${API_BASE}/api/users/update`,
+      `${API_BASE}/api/users/profile`,
+      `${API_BASE}/api/profile/me`,
+      id ? `${API_BASE}/api/profile/${idPart}` : null,
+      `${API_BASE}/api/user/me`,
+      id ? `${API_BASE}/api/user/${idPart}` : null,
+      `${API_BASE}/api/me/profile`,
+      `${API_BASE}/api/account/me`,
     ].filter(Boolean);
 
-    // try PUT → PATCH → POST for each base
     const methods = ["PUT", "PATCH", "POST"];
-    const all = [];
-    for (const base of bases) {
-      for (const m of methods) all.push({ url: base, method: m });
-    }
-    return all;
+    const out = [];
+    for (const b of bases) for (const m of methods) out.push({ url: b, method: m });
+    return out;
   };
-
-  async function preflight(url, token) {
-    // quick probe: OPTIONS (if supported) or GET for existence
-    try {
-      const opt = await fetch(url, {
-        method: "OPTIONS",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      });
-      if (opt.ok || opt.status === 204) return true;
-    } catch {}
-    try {
-      const get = await fetch(url, {
-        method: "GET",
-        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-      });
-      // 200/401/405 means the route exists in some form
-      if ([200, 401, 405].includes(get.status)) return true;
-    } catch {}
-    return false;
-  }
 
   async function tryOne(url, method, fd, token) {
     const res = await fetch(url, {
@@ -70,11 +49,8 @@ export default function EditProfilePage({ user, setUser }) {
         return {};
       }
     }
-
-    // 404/405 → not a match; let caller try the next candidate
     if (res.status === 404 || res.status === 405) return null;
 
-    // other errors → raise a readable message (strip HTML if present)
     let msg = "";
     try {
       const text = await res.text();
@@ -90,20 +66,12 @@ export default function EditProfilePage({ user, setUser }) {
       const token = getToken();
 
       const attempts = candidates(userId);
-
-      // filter to routes that at least exist (fast preflight)
-      const viable = [];
-      for (const c of attempts) {
-        // skip id routes if no id
-        if (c.url.includes("//")) continue;
-        if (c.url.includes("%") && !userId) continue;
-        const exists = await preflight(c.url, token);
-        if (exists) viable.push(c);
-      }
-
       let saved = null;
-      for (const v of viable) {
-        const out = await tryOne(v.url, v.method, fd, token);
+
+      for (const c of attempts) {
+        // skip id routes when no id
+        if (c.url.includes("/undefined")) continue;
+        const out = await tryOne(c.url, c.method, fd, token);
         if (out) {
           saved = out;
           break;
@@ -111,29 +79,16 @@ export default function EditProfilePage({ user, setUser }) {
       }
 
       if (!saved) {
-        // final attempt without preflight, in case OPTIONS/GET are blocked
-        for (const c of attempts) {
-          const out = await tryOne(c.url, c.method, fd, token);
-          if (out) {
-            saved = out;
-            break;
-          }
-        }
-      }
-
-      if (!saved) {
         throw new Error(
-          "No matching profile update route. Tried /api/users/me, /api/users/:id, /api/users/update, /api/users/profile, /api/profile/me, /api/profile/:id, /api/user/me, /api/user/:id, /api/me/profile, /api/account/me (PUT/PATCH/POST)."
+          "No matching profile update route on the backend. Tried several common endpoints on :3000."
         );
       }
 
-      // update app state and go back to profile
       if (setUser) setUser(saved);
       navigate(userId ? `/profile/${userId}` : "/profile");
-      return saved; // so the child form can consume it if needed
+      return saved;
     } catch (e) {
       setError(e?.message || "Update failed");
-      // surface to child for optional setUser
       throw e;
     } finally {
       setSubmitting(false);

@@ -1,7 +1,5 @@
 import Friend from "../../models/friend.js";
 
-
-
 //add- remove-, edit, list-, get- (friend)
 
 // to get api/friends
@@ -61,43 +59,6 @@ async function show(req, res) {
         res.status(400).json({ msg: e.message })
     }
 }
-
-
-// to list the friend
-
-//     export async function listFriends(req, res, next) {
-//   try {
-//     const { q, tag } = req.query;
-//     const page = toInt(req.query.page, 1);
-//     const limit = toInt(req.query.limit, 10);
-//     const skip = (page - 1) * limit;
-
-//     const filter = {};
-//     if (q) {
-//       const rgx = new RegExp(q, 'i');
-//       filter.$or = [{ name: rgx }, { nickName: rgx }];
-//     }
-//     if (tag) {
-//       filter.tags = tag;
-//     }
-
-//     const [items, total] = await Promise.all([
-//       friend.find(filter).sort({ name: 1 }).skip(skip).limit(limit),
-//       friend.countDocuments(filter),
-//     ]);
-
-//     res.json({
-//       page,
-//       limit,
-//       total,
-//       pages: Math.ceil(total / limit),
-//       items,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-
 
 //remove friend
 
