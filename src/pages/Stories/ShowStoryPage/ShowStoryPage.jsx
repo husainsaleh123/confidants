@@ -3,6 +3,37 @@ import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 import { getToken } from "../../../utilities/users-service";
 import styles from "./ShowStoryPage.module.scss";
 
+// Mood label map (keeps things pretty if back-end stores keys)
+const DEFAULT_MOOD_LABELS = new Map([
+  ["happy", "Happy 😊"],
+  ["sad", "Sad 😢"],
+  ["excited", "Excited 🤩"],
+  ["nostalgic", "Nostalgic 🕰️"],
+  ["angry", "Angry 🧿"],
+  ["chill", "Chill 😎"],
+  ["grateful", "Grateful 🙏"],
+  ["tired", "Tired 🥱"],
+]);
+
+// Universal moods normalizer
+function normalizeMoods(input) {
+  if (input == null) return [];
+  const arr = Array.isArray(input) ? input : [input];
+
+  const parts = arr.flatMap((item) => {
+    if (item == null) return [];
+    if (typeof item === "string") return item.split(",");
+    if (typeof item === "object") {
+      const raw = item.value ?? item.label ?? item.name ?? item.mood ?? "";
+      return String(raw).split(",");
+    }
+    return [String(item)];
+  });
+
+  const clean = parts.map((s) => String(s).trim()).filter(Boolean);
+  return Array.from(new Set(clean));
+}
+
 export default function ShowStoryPage() {
   const { id } = useParams();
   const location = useLocation();
@@ -17,11 +48,16 @@ export default function ShowStoryPage() {
     if (typeof window === "undefined") return;
 
     const readJSON = (k) => {
-      try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; }
+      try {
+        const raw = localStorage.getItem(k);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
     };
     const extras = readJSON("stories:extras") || [];
     const snapshot = readJSON("stories:lastSnapshot") || [];
-    const lastNew = readJSON("lastNewStory");
+    const lastNew = readJSON("stories:lastNew") || readJSON("lastNewStory");
     const all = [...extras, ...snapshot, ...(lastNew ? [lastNew] : [])];
     const found = all.find((s) => String(idOf(s)) === String(id));
     if (found) setStory(found);
@@ -29,10 +65,14 @@ export default function ShowStoryPage() {
 
   const allImages = useMemo(() => {
     if (!story) return [];
-    if (Array.isArray(story.photos) && story.photos.length) return story.photos.filter(Boolean);
-    if (Array.isArray(story.mediaUrls) && story.mediaUrls.length) return story.mediaUrls.filter(Boolean);
-    if (Array.isArray(story.images) && story.images.length) return story.images.filter(Boolean);
-    if (typeof story.photoUrl === "string" && story.photoUrl) return [story.photoUrl];
+    if (Array.isArray(story.photos) && story.photos.length)
+      return story.photos.filter(Boolean);
+    if (Array.isArray(story.mediaUrls) && story.mediaUrls.length)
+      return story.mediaUrls.filter(Boolean);
+    if (Array.isArray(story.images) && story.images.length)
+      return story.images.filter(Boolean);
+    if (typeof story.photoUrl === "string" && story.photoUrl)
+      return [story.photoUrl];
     if (typeof story.cover === "string" && story.cover) return [story.cover];
     return [];
   }, [story]);
@@ -40,15 +80,27 @@ export default function ShowStoryPage() {
   const [friendIndex, setFriendIndex] = useState(null);
   useEffect(() => {
     let active = true;
-    if (!story || !Array.isArray(story?.friendsInvolved) || !story.friendsInvolved.length) return;
+    if (
+      !story ||
+      !Array.isArray(story?.friendsInvolved) ||
+      !story.friendsInvolved.length
+    )
+      return;
 
     const hasNames = story.friendsInvolved.some(
-      (f) => typeof f === "object" && (f?.name || f?.fullName || f?.displayName)
+      (f) =>
+        typeof f === "object" && (f?.name || f?.fullName || f?.displayName)
     );
     if (hasNames) return;
 
     async function loadFriends() {
-      const readJSON = (k) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; };
+      const readJSON = (k) => {
+        try {
+          const raw = localStorage.getItem(k);
+          return raw ? JSON.parse(raw) : null;
+        } catch {
+          return null;
+        }
       };
       const cached = readJSON("friends:index");
       if (cached && active) {
@@ -67,31 +119,61 @@ export default function ShowStoryPage() {
         if (!active) return;
         const map = new Map((list || []).map((f) => [String(f?._id || f?.id), f]));
         setFriendIndex(map);
-        try { localStorage.setItem("friends:index", JSON.stringify(list || [])); } catch {}
+        try {
+          localStorage.setItem("friends:index", JSON.stringify(list || []));
+        } catch {}
       } catch {}
     }
 
     loadFriends();
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [story]);
 
   const fmtDate = (d) => {
     const dt = d ? new Date(d) : null;
     if (!dt || Number.isNaN(dt.getTime())) return "";
-    return dt.toLocaleDateString(undefined, { day: "2-digit", month: "long", year: "numeric" });
+    return dt.toLocaleDateString(undefined, {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
   };
   const fmtLogged = (d) => {
     const dt = d ? new Date(d) : null;
     if (!dt || Number.isNaN(dt.getTime())) return "";
-    const datePart = dt.toLocaleDateString(undefined, { day: "2-digit", month: "long", year: "numeric" });
-    const timePart = dt.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+    const datePart = dt.toLocaleDateString(undefined, {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+    const timePart = dt.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+    });
     return `${datePart}, ${timePart}`;
   };
+
+  // ---- Moods: normalize robustly & map to nice labels
+  const moods = useMemo(() => {
+    if (!story) return [];
+    const raw = normalizeMoods(story?.moods ?? story?.mood);
+    const pretty = raw.map((m) => {
+      const key = String(m).toLowerCase();
+      return DEFAULT_MOOD_LABELS.get(key) || m;
+    });
+    const seen = new Set();
+    return pretty.filter((m) => (seen.has(m) ? false : (seen.add(m), true)));
+  }, [story]);
 
   const friends = useMemo(() => {
     const arr = story?.friendsInvolved || [];
     const labelOf = (f) => {
-      if (typeof f === "object" && f) return f.name || f.fullName || f.displayName || f._id || f.id;
+      if (typeof f === "object" && f)
+        return (
+          f.name || f.fullName || f.displayName || f._id || f.id
+        );
       const idStr = String(f);
       if (friendIndex && friendIndex.has(idStr)) {
         const fo = friendIndex.get(idStr);
@@ -107,7 +189,9 @@ export default function ShowStoryPage() {
       <main className={styles.page}>
         <div className={styles.container}>
           <p>Story not found.</p>
-          <p><Link to="/stories">← Back to all stories</Link></p>
+          <p>
+            <Link to="/stories">← Back to all stories</Link>
+          </p>
         </div>
       </main>
     );
@@ -116,8 +200,19 @@ export default function ShowStoryPage() {
   const sid = String(idOf(story) || id || "").trim();
 
   function pruneAndExit() {
-    const readJSON = (k) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; } };
-    const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+    const readJSON = (k) => {
+      try {
+        const raw = localStorage.getItem(k);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    };
+    const writeJSON = (k, v) => {
+      try {
+        localStorage.setItem(k, JSON.stringify(v));
+      } catch {}
+    };
     const extras = readJSON("stories:extras") || [];
     const next = extras.filter((s) => String(idOf(s)) !== sid);
     writeJSON("stories:extras", next);
@@ -179,7 +274,12 @@ export default function ShowStoryPage() {
             {allImages.length > 1 && (
               <div className={styles.thumbRow}>
                 {allImages.slice(1).map((src, i) => (
-                  <img key={i} className={styles.thumb} src={src} alt={`thumb ${i + 2}`} />
+                  <img
+                    key={i}
+                    className={styles.thumb}
+                    src={src}
+                    alt={`thumb ${i + 2}`}
+                  />
                 ))}
               </div>
             )}
@@ -189,7 +289,8 @@ export default function ShowStoryPage() {
           <div className={styles.content}>
             {story.date && (
               <div className={styles.metaLine}>
-                <span className={styles.metaLabel}>Date:</span> {fmtDate(story.date)}
+                <span className={styles.metaLabel}>Date:</span>{" "}
+                {fmtDate(story.date)}
               </div>
             )}
 
@@ -200,28 +301,25 @@ export default function ShowStoryPage() {
                 <span className={styles.metaLabel}>Friends involved:</span>
                 <div className={styles.tags}>
                   {friends.map((f, i) => (
-                    <span className={styles.tag} key={`${f}-${i}`}>{f}</span>
+                    <span className={styles.tag} key={`${f}-${i}`}>
+                      {f}
+                    </span>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Moods: array or single */}
-            {Array.isArray(story.moods) && story.moods.length > 0 && (
+            {moods.length > 0 && (
               <div className={styles.metaLine}>
-                <span className={styles.metaLabel}>Mood:</span>
+                <span className={styles.metaLabel}>
+                  {moods.length > 1 ? "Moods:" : "Mood:"}
+                </span>
                 <div className={styles.tags}>
-                  {story.moods.map((m, i) => (
-                    <span className={styles.tag} key={`${m}-${i}`}>{m}</span>
+                  {moods.map((m, i) => (
+                    <span className={styles.tag} key={`${m}-${i}`}>
+                      {m}
+                    </span>
                   ))}
-                </div>
-              </div>
-            )}
-            {!Array.isArray(story.moods) && story.mood && (
-              <div className={styles.metaLine}>
-                <span className={styles.metaLabel}>Mood:</span>
-                <div className={styles.tags}>
-                  <span className={styles.tag}>{story.mood}</span>
                 </div>
               </div>
             )}
@@ -233,7 +331,11 @@ export default function ShowStoryPage() {
             )}
 
             <div className={styles.actions}>
-              <button type="button" className={`${styles.btn} ${styles.btnBack}`} onClick={() => navigate("/stories")}>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnBack}`}
+                onClick={() => navigate("/stories")}
+              >
                 &larr; Back
               </button>
               {sid && (
@@ -241,11 +343,17 @@ export default function ShowStoryPage() {
                   <button
                     type="button"
                     className={`${styles.btn} ${styles.btnEdit}`}
-                    onClick={() => navigate(`/stories/${sid}/edit`, { state: { story } })}
+                    onClick={() =>
+                      navigate(`/stories/${sid}/edit`, { state: { story } })
+                    }
                   >
                     Edit story
                   </button>
-                  <button type="button" className={`${styles.btn} ${styles.btnDanger}`} onClick={handleDelete}>
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnDanger}`}
+                    onClick={handleDelete}
+                  >
                     Remove story
                   </button>
                 </>

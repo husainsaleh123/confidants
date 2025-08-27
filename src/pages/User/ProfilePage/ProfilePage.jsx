@@ -54,9 +54,9 @@ export default function ProfilePage({ user }) {
           </Link>
 
           {userId ? (
-            <Link to={`/profile/${userId}/edit`}>
+            <Link to={`/stories`}>
               <button type="button" className={`${styles.btn} ${styles.editBtn}`}>
-                Edit
+                Stories
               </button>
             </Link>
           ) : (

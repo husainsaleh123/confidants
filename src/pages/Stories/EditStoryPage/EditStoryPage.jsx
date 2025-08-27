@@ -1,62 +1,107 @@
-// src/pages/Stories/EditStoryPage/EditStoryPage.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useLocation, useParams, Link } from "react-router-dom";
 import StoryForm from "../../../components/Stories/StoryForm/StoryForm";
-import { getStory, updateStory } from "../../../utilities/stories-api";
 import styles from "./EditStoryPage.module.scss";
+import { updateStory } from "../../../utilities/stories-api";
+import { getToken } from "../../../utilities/users-service";
 
 export default function EditStoryPage() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = useParams();
 
   const idOf = (s) => s?._id || s?.id;
 
-  const [story, setStory] = useState(() => location.state?.story || null);
+  // helpers for localStorage
+  const readJSON = (k, fallback) => {
+    if (typeof window === "undefined") return fallback;
+    try {
+      const raw = localStorage.getItem(k);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  };
+  const writeJSON = (k, v) => {
+    if (typeof window === "undefined") return;
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch {}
+  };
+
+  const toArray = (v) =>
+    Array.isArray(v)
+      ? v
+      : v == null || v === ""
+      ? []
+      : String(v).split(",").map((s) => s.trim()).filter(Boolean);
+
+  const normalizeMoodsOnStory = (s) => {
+    const raw = Array.isArray(s?.moods)
+      ? s.moods
+      : s?.moods
+      ? toArray(s.moods)
+      : s?.mood
+      ? [s.mood]
+      : [];
+    const cleaned = raw.map(String).filter(Boolean);
+    return { ...s, moods: cleaned, mood: cleaned[0] || s?.mood || "" };
+  };
+
+  // initial story: prefer router state; else check caches; else fetch
+  const [story, setStory] = useState(() =>
+    location.state?.story ? normalizeMoodsOnStory(location.state.story) : null
+  );
   const [loading, setLoading] = useState(!story);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    let cancelled = false;
+    if (story) return;
+
+    let active = true;
+
     async function load() {
       try {
-        if (story) { setLoading(false); return; }
-        const readJSON = (k) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; } };
-        const caches = [
-          ...(readJSON("stories:extras") || []),
-          ...(readJSON("stories:lastSnapshot") || []),
-          ...(readJSON("stories:lastNew") ? [readJSON("stories:lastNew")] : []),
-        ];
-        const fromCache = caches.find((s) => String(idOf(s)) === String(id));
-        if (fromCache && !cancelled) setStory(fromCache);
+        // 1) try caches
+        const extras = readJSON("stories:extras", []);
+        const snapshot = readJSON("stories:lastSnapshot", []);
+        const lastNew = readJSON("stories:lastNew", null);
+        const all = [...extras, ...snapshot, ...(lastNew ? [lastNew] : [])];
+        const found = all.find((s) => String(idOf(s)) === String(id));
+        if (found && active) {
+          setStory(normalizeMoodsOnStory(found));
+          setLoading(false);
+          return;
+        }
 
-        setLoading(true);
-        const s = await getStory(id);
-        if (!cancelled) setStory(s?.story ?? s?.data ?? s ?? null);
+        // 2) fetch from API
+        const token = getToken();
+        const res = await fetch(`/api/stories/${encodeURIComponent(id)}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+          credentials: "include",
+        });
+        if (!active) return;
+
+        if (!res.ok) {
+          const text = await res.text().catch(() => "");
+          throw new Error(text || `HTTP ${res.status}`);
+        }
+        const json = await res.json();
+        const raw = json?.story ?? json?.data ?? json ?? {};
+        setStory(normalizeMoodsOnStory(raw));
       } catch (e) {
-        if (!cancelled) setError(e?.message || "Failed to load story.");
+        setError(e?.message || "Failed to load story.");
       } finally {
-        if (!cancelled) setLoading(false);
+        if (active) setLoading(false);
       }
     }
+
     load();
-    return () => { cancelled = true; };
+    return () => { active = false; };
   }, [id, story]);
 
-// inside useMemo
-const initialData = useMemo(() => {
-  if (!story) return {};
-  return {
-    title: story.title || "",
-    description: story.content || "",
-    friends: (story.friendsInvolved || []).map((f) => f?._id || f?.id || f).filter(Boolean),
-    moods: Array.isArray(story.moods) ? story.moods : (story.mood ? [story.mood] : []),
-    mood: story.mood || "",
-    media: story.photos || [],
-    date: story.date || "",
-  };
-}, [story]);
-
+  const pageTitle = useMemo(
+    () => (story?.title ? `Edit: ${story.title}` : "Edit story"),
+    [story]
+  );
 
   async function handleSubmit(form) {
     try {
@@ -64,85 +109,144 @@ const initialData = useMemo(() => {
 
       const getFromFD = (fd, key) => (fd.get(key) ?? "").toString();
       const getAllFromFD = (fd, key) => fd.getAll(key).map(String);
-      const toArray = (v) =>
-        Array.isArray(v) ? v : v == null || v === "" ? [] : String(v).split(",").map((s) => s.trim()).filter(Boolean);
 
       let payload;
 
       if (typeof FormData !== "undefined" && form instanceof FormData) {
-        const moodsArr = getAllFromFD(form, "moods[]");
+        // Accept both moods[] and moods
+        const moodsArr = [
+          ...getAllFromFD(form, "moods[]"),
+          ...getAllFromFD(form, "moods"),
+        ].filter(Boolean);
+
         const dateStr = getFromFD(form, "date");
+
         payload = {
           title: getFromFD(form, "title"),
           content: getFromFD(form, "description"),
           mood: moodsArr[0] || "",
           moods: moodsArr,
-          date: dateStr ? new Date(dateStr).toISOString() : story?.date || new Date().toISOString(),
-          friendsInvolved: getAllFromFD(form, "friends[]"),
-          photos: toArray(getFromFD(form, "mediaUrls")).length ? toArray(getFromFD(form, "mediaUrls")) : story?.photos || [],
+          date: dateStr ? new Date(dateStr).toISOString() : undefined,
+          friendsInvolved: [
+            ...getAllFromFD(form, "friends[]"),
+            ...getAllFromFD(form, "friends"),
+          ],
+          // media is handled elsewhere in your app; we pass through URLs if present
+          photos: toArray(getFromFD(form, "mediaUrls")),
           visibility: story?.visibility || "private",
         };
       } else {
-        const moodsArr = toArray(form.moods);
+        const moodsArr = Array.isArray(form.moods) ? form.moods : toArray(form.moods);
         const dateStr = (form.date || "").toString().trim();
+
         payload = {
           title: form.title || "",
           content: form.description || "",
           mood: (moodsArr[0] || "").toString(),
           moods: moodsArr,
-          date: dateStr ? new Date(dateStr).toISOString() : story?.date || new Date().toISOString(),
-          friendsInvolved: toArray(form.friends),
-          photos: toArray(form.media).length ? toArray(form.media) : story?.photos || [],
+          date: dateStr ? new Date(dateStr).toISOString() : undefined,
+          friendsInvolved: Array.isArray(form.friends) ? form.friends : toArray(form.friends),
+          photos: Array.isArray(form.media) ? form.media : toArray(form.media),
           visibility: story?.visibility || "private",
         };
       }
 
-      const updated = await updateStory(id, payload);
-      const updatedStory = updated?.story ?? updated?.data ?? updated ?? payload;
-      updatedStory._id = idOf(updatedStory) || idOf(story) || id;
-      if (!updatedStory.createdAt && story?.createdAt) updatedStory.createdAt = story.createdAt;
+      // Call API
+      const updated = await updateStory(idOf(story) || id, payload);
+      const raw = updated?.story ?? updated?.data ?? updated ?? null;
 
-      const readJSON = (k, fb) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fb; } catch { return fb; } };
-      const writeJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
-      const replaceIn = (arr) =>
-        (arr || []).map((x) => (String(idOf(x)) === String(idOf(updatedStory)) ? { ...x, ...updatedStory } : x));
+      // Normalize server response
+      let newStory = raw ? normalizeMoodsOnStory(raw) : null;
 
-      writeJSON("stories:extras", replaceIn(readJSON("stories:extras", [])));
-      writeJSON("stories:lastSnapshot", replaceIn(readJSON("stories:lastSnapshot", [])));
-      writeJSON("stories:lastNew", updatedStory);
+      // Ensure we preserve full moods selected by the user even if API only echoes one
+      const clientMoods = Array.isArray(payload?.moods) ? payload.moods : [];
+      if (newStory && clientMoods.length) {
+        newStory = {
+          ...newStory,
+          moods: [...new Set(clientMoods.map(String).filter(Boolean))],
+          mood: (clientMoods[0] || newStory.mood || "").toString(),
+        };
+      }
 
-      navigate(`/stories/${id}`, { state: { story: updatedStory, justEdited: true } });
+      // Keep createdAt if server didn't send it back
+      if (newStory && !newStory.createdAt && story?.createdAt) {
+        newStory.createdAt = story.createdAt;
+      }
+
+      // Update local caches so Show page reflects all moods immediately
+      if (newStory && idOf(newStory)) {
+        const sid = String(idOf(newStory));
+        const extras = readJSON("stories:extras", []);
+        const next = [newStory, ...extras.filter((s) => String(idOf(s)) !== sid)];
+        writeJSON("stories:extras", next);
+        writeJSON("stories:lastSnapshot", next); // optional: keep snapshot aligned
+      }
+
+      navigate(`/stories/${encodeURIComponent(idOf(newStory) || id)}`, {
+        state: { story: newStory },
+      });
     } catch (e) {
       setError(e?.message || "Failed to update story.");
     }
   }
 
-  if (loading) return <main><p>Loading…</p></main>;
-  if (error) return (
-    <main>
-      <p>{error}</p>
-      <p><Link to="/stories">← Back to all stories</Link></p>
-    </main>
-  );
-  if (!story) return (
-    <main>
-      <p>Story not found.</p>
-      <p><Link to="/stories">← Back to all stories</Link></p>
-    </main>
-  );
+  if (loading) {
+    return (
+      <section className={styles.page}>
+        <div className={styles.header}>
+          <Link to="/stories" className={styles.backLink}>← Back to all stories</Link>
+        </div>
+        <p>Loading…</p>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className={styles.page}>
+        <div className={styles.header}>
+          <Link to="/stories" className={styles.backLink}>← Back to all stories</Link>
+        </div>
+        <p className={styles.error}>{error}</p>
+      </section>
+    );
+  }
+
+  if (!story) {
+    return (
+      <section className={styles.page}>
+        <div className={styles.header}>
+          <Link to="/stories" className={styles.backLink}>← Back to all stories</Link>
+        </div>
+        <p>Story not found.</p>
+      </section>
+    );
+  }
+
+  // Prepare initial data for StoryForm — it already normalizes moods internally,
+  // but we pass the normalized story for consistency.
+  const initialData = {
+    title: story.title,
+    description: story.content || story.description || "",
+    friends: Array.isArray(story.friendsInvolved) ? story.friendsInvolved : [],
+    moods: Array.isArray(story.moods) ? story.moods : toArray(story.moods || story.mood),
+    media: Array.isArray(story.photos) ? story.photos : [],
+    date: story.date,
+  };
 
   return (
     <section className={styles.page}>
-    <div className={styles.header}>
-      <Link to={`/stories/${id}`} className={styles.backLink}>
-        ← Back to story
-      </Link>
-    </div>
+      <div className={styles.header}>
+        <Link to="/stories" className={styles.backLink}>← Back to all stories</Link>
+        {/* <h1 className={styles.title}>{pageTitle}</h1> */}
+      </div>
 
-      <div>
+      {error && <p className={styles.error}>{error}</p>}
+
+      <div className={styles.formShell}>
         <StoryForm
           initialData={initialData}
-          heading={`Edit ${story.title || "story"}`}
+          heading={pageTitle}
           submitLabel="Save changes"
           onSubmit={handleSubmit}
         />
