@@ -125,5 +125,11 @@ $brand: #2E46FF;
 //.birthday { /* small icon/text if you add one */ }
 
 .actions { display:flex; gap:.75rem; margin-top:.5rem; }
-//.viewBtn { /* blue rounded button, matches screenshot */ }
+.viewBtn { background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+  border-radius: 9999px;
+  padding: .6rem 1rem;
+  font-weight: 800;
+  text-decoration: none; }
 //.removeBtn { /* red rounded button */ }

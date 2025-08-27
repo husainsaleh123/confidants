@@ -1,0 +1,31 @@
+$brand: #2E46FF;
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1.25rem;
+  background: blue;
+  border-top: 1px solid #e5e7eb;
+}
+
+.copyright {
+  font-size: .9rem;
+  color: ghostwhite;
+  font-weight: 600;
+}
+
+.logoutBtn {
+  background: $brand;
+  color: #fff;
+  border: 1.5px solid $brand;
+  border-radius: 9999px;
+  padding: .55rem 1rem;
+  font-weight: 800;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($brand, 5%);
+    border-color: darken($brand, 5%);
+  }
+}
