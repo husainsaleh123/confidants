@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import StoryForm from "../../../components/Stories/StoryForm/StoryForm";
 import { getStory, updateStory } from "../../../utilities/stories-api";
+import styles from "./EditStoryPage.module.scss";
 
 export default function EditStoryPage() {
   const { id } = useParams();
@@ -131,10 +132,12 @@ const initialData = useMemo(() => {
   );
 
   return (
-    <section>
-      <div>
-        <Link to={`/stories/${id}`}>← Back to story</Link>
-      </div>
+    <section className={styles.page}>
+    <div className={styles.header}>
+      <Link to={`/stories/${id}`} className={styles.backLink}>
+        ← Back to story
+      </Link>
+    </div>
 
       <div>
         <StoryForm

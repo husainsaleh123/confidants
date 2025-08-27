@@ -200,7 +200,7 @@ export default function ShowStoryPage() {
                 <span className={styles.metaLabel}>Friends involved:</span>
                 <div className={styles.tags}>
                   {friends.map((f, i) => (
-                    <span className={`${styles.tag} ${styles.friendTag}`} key={`${f}-${i}`}>{f}</span>
+                    <span className={styles.tag} key={`${f}-${i}`}>{f}</span>
                   ))}
                 </div>
               </div>

@@ -8,6 +8,7 @@
 .container {
   width: 100%;
   max-width: 960px;
+  line-height: 2;
 }
 
 .title {
@@ -89,7 +90,7 @@
   font-size: 12px;
   padding: 4px 8px;
   font-weight: 500;
-  border-radius: 20px;
+  border-radius: 16px;
   background: #ffffff;        /* indigo-50 */
   color: blue;              /* indigo-800 */
   border: 2px solid blue;
