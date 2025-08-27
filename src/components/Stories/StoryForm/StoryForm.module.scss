@@ -135,6 +135,16 @@
   color: #fff;
 }
 
+/* fields stay centered and 80% width */
+.input,
+.textarea,
+.controlRight {
+  width: 90%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+
 /* Friends / Mood line: select + small (+) button */
 .controlRight {
   display: flex;
@@ -169,4 +179,13 @@
 .actions {
   width: 80%;
   max-width: 720px;
+}
+
+
+/* labels: left-aligned and same 80% width as fields */
+.label {
+  width: 80%;
+  max-width: 720px;
+  align-self: flex-start;      /* <— left align the label */
+  text-align: left;
 }
