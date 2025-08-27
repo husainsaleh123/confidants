@@ -24,13 +24,15 @@ import ShowStoryPage from '../Stories/ShowStoryPage/ShowStoryPage';
 import AuthPage from '../User/AuthPage/AuthPage';
 import EditProfilePage from '../User/EditProfilePage/EditProfilePage';
 import ProfilePage from '../User/ProfilePage/ProfilePage';
-
+import Footer from '../../components/Footer/Footer';
+import NavBar from '../../components/Navbar/Navbar';
 export default function App() {
   const [user, setUser] = useState(getUser());
   return (
     <main className={styles.App}>
-      { user ?
+      {user ?
         <>
+          <NavBar user={user} setUser={setUser} />
           <Routes>
             {/* client-side route that renders the component instance if the path matches the url in the address bar */}
             <Route path="/" element={<Home user={user} setUser={setUser} />} />
@@ -55,15 +57,16 @@ export default function App() {
             <Route path="/stories/:id/edit" element={<EditStoryPage user={user} setUser={setUser} />} />
             <Route path="/stories/:id" element={<ShowStoryPage user={user} setUser={setUser} />} />
             <Route path="/auth" element={<AuthPage user={user} setUser={setUser} />} />
-
-            
             {/* redirect to /orders/new if path in address bar hasn't matched a <Route> above */}
             <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
+          <Footer user={user} setUser={setUser} />
+
         </>
         :
         <AuthPage setUser={setUser} />
       }
+
     </main>
   );
 }
