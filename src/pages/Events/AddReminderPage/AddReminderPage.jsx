@@ -54,10 +54,10 @@ export default function AddEventPage() {
         <ReminderForm onSubmit={handleSubmit} submitting={submitting} />
         {/* make the Button component to fix this */}
         <div className={styles.actions}>
-          <button type="submit" >
+          {/* <button type="submit" > */}
             {/* {submitting ? "Saving..." : "Save Reminder"} */}
-            save
-          </button>
+            {/* save
+         </button> */}
         </div>
       </div>
     </section>

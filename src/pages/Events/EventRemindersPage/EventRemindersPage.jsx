@@ -78,7 +78,7 @@ export default function EventRemindersPage() {
           {filtered.length === 0 ? (
             <p className={styles.muted}>No reminders found.</p>
           ) : (
-            <ReminderList reminders={filtered} />
+            <ReminderList reminders={filtered} showViewButton />
           )}
         </div>
       )}
