@@ -1,0 +1,101 @@
+$brand: #2E46FF;
+
+.page {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background: #fff;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left column */
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: blue;
+}
+
+.logo {
+  height: 80px;
+  margin-right: auto;
+}
+
+.illustration {
+  max-width: 80%;
+  height: auto;
+}
+
+/* Right column */
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  padding: 1.25rem;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #f3f4f6;
+  border-radius: 9999px;
+  padding: .25rem;
+  margin-bottom: 1rem;
+}
+
+.tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: .6rem .9rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  cursor: pointer;
+  color: #111827;
+
+  &:focus { outline: none; }
+}
+
+.active {
+  background: #fff;
+  color: $brand;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+
+//.formWrap {
+  /* space for your LoginForm / SignupForm */
+//}
+
+.switchLine {
+  margin-top: 1rem;
+  text-align: center;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.switchBtn {
+  border: 0;
+  background: transparent;
+  color: $brand;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 0 .25rem;
+
+  &:focus { outline: none; }
+}
