@@ -1,19 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// adjust the path if your utilities file lives elsewhere
-import {
-  updateInteraction,
-  deleteInteraction,
-} from "../../../utilities/interaction-api";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function InteractionCard({ item }) {
-  // item: { _id, name, date, description, friends:[{_id,name}], favourite }
   const nav = useNavigate();
-  const [fav, setFav] = useState(!!item?.favourite);
-  const [busy, setBusy] = useState(false);
-  const [deleted, setDeleted] = useState(false);
+  const location = useLocation();
 
-  if (!item || deleted) return null;
+  if (!item) return null;
 
   const { _id, name, date, description, friends = [] } = item;
 
@@ -25,55 +17,13 @@ export default function InteractionCard({ item }) {
       })
     : "—";
 
-  // toggle favourite (no parent callback)
-  const handleFavourite = async () => {
-    if (busy) return;
-    const next = !fav;
-    setBusy(true);
-    setFav(next); // optimistic UI
-    try {
-      await updateInteraction(_id, { favourite: next });
-    } catch (err) {
-      console.error(err);
-      setFav(!next); // revert on error
-      alert("Failed to update favourite");
-    } finally {
-      setBusy(false);
-    }
-  };
+  // ✅ detect if we're on `/interactions/:id`
+  const isDetailPage = location.pathname === `/interactions/${_id}`;
 
-  // view interaction
   const handleView = () => nav(`/interactions/${_id}`);
-
-  // remove interaction (hide locally after API success)
-  const handleRemove = async () => {
-    if (busy) return;
-    if (!confirm("Delete")) return;
-    setBusy(true);
-    try {
-      await deleteInteraction(_id);
-      setDeleted(true); // hide this card locally
-    } catch (e) {
-      console.error(e);
-      alert("card not removed");
-    } finally {
-      setBusy(false);
-    }
-  };
 
   return (
     <article className="ix-card">
-      {/* top-right star */}
-      <button
-        className={`ix-star ${fav ? "is-on" : ""}`}
-        aria-label={fav ? "Remove from favourites" : "Add to favourites"}
-        title={fav ? "Remove from favourites" : "Add to favourites"}
-        onClick={handleFavourite}
-        disabled={busy}
-      >
-        ★
-      </button>
-
       <h2 className="ix-title">{name}</h2>
       <p className="ix-date">
         <strong>Date:</strong> {prettyDate}
@@ -94,24 +44,18 @@ export default function InteractionCard({ item }) {
         </div>
       )}
 
-      <div className="ix-actions">
-        <button
-          type="button"
-          className="ix-btn ix-btn-primary"
-          onClick={handleView}
-          disabled={busy}
-        >
-          View interaction
-        </button>
-        <button
-          type="button"
-          className="ix-btn ix-btn-danger"
-          onClick={handleRemove}
-          disabled={busy}
-        >
-          Remove interaction
-        </button>
-      </div>
+      {/* ✅ show "View interaction" only if not on detail page */}
+      {!isDetailPage && (
+        <div className="ix-actions">
+          <button
+            type="button"
+            className="ix-btn ix-btn-primary"
+            onClick={handleView}
+          >
+            View interaction
+          </button>
+        </div>
+      )}
     </article>
   );
 }
