@@ -23,7 +23,7 @@ export default function ShowEventPage() {
           setError("");
         }
       } catch (e) {
-        setError(e?.message || "Failed to load event.");
+        setError(e?.message || "Failed to load Event.");
       } finally {
         if (mounted) setLoading(false);
       }
@@ -38,7 +38,7 @@ export default function ShowEventPage() {
       await deleteEvent(id);
       navigate("/events"); // back to EventRemindersPage after deletion
     } catch (e) {
-      setError(e?.message || "Failed to remove event.");
+      setError(e?.message || "Failed to Remove Event.");
     }
   }
 

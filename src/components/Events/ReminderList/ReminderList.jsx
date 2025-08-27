@@ -10,7 +10,7 @@ import styles from "./ReminderList.module.scss";
  */
 export default function ReminderList({ reminders = [], showViewButton = false }) {
   if (!reminders.length) {
-    return <p className={styles.empty}>No reminders found.</p>;
+    return <p className={styles.empty}>No Event Reminders found.</p>;
   }
 
   return (

@@ -37,13 +37,19 @@ export default function EditEventPage() {
   // Prepare initial values for the form
   const initial = useMemo(() => {
     if (!event) return null;
-    const join = (arr) => (Array.isArray(arr) ? arr.join(", ") : "");
+    // Ensure friends is an array of IDs for FriendSelector
+    let friends = [];
+    if (Array.isArray(event.friends)) {
+      friends = event.friends.map(f => (typeof f === 'string' ? f : f._id || f.id)).filter(Boolean);
+    }
     return {
       title: event.title || "",
       date: event.date ? event.date.slice(0, 10) : "",
       type: event.type || "",
+      friends : event.friends || [] ,
       description: event.description || "",
       recurring: event.recurring || false,
+      friends,
       // tags: join(event.tags),
     };
   }, [event]);
@@ -57,19 +63,16 @@ export default function EditEventPage() {
         title: form.title,
         date: form.date || null,
         type: form.type || "",
+        friends : form.friends || [] ,
         description: form.description,
-        recurring: form.recurring || false,
-        // tags: String(form.tags || "")
-        //   .split(",")
-        //   .map((t) => t.trim())
-        //   .filter(Boolean),
+        recurring: typeof form.recurring === 'object' ? (form.recurring.enabled ? form.recurring.interval : 'never') : form.recurring || 'never',
       };
 
       const updated = await updateEvent(id, payload); // PUT /api/events/:id
       if (updated && updated._id) navigate(`/events/${updated._id}`);
       else navigate(`/events/${id}`);
     } catch (e) {
-      setError(e?.message || "Failed to save changes.");
+      setError(e?.message || "Failed to Save Changes.");
     } finally {
       setSubmitting(false);
     }
@@ -79,7 +82,7 @@ export default function EditEventPage() {
     <section className={styles.page}>
       <div className={styles.headerRow}>
         <h1 className={styles.title}>
-          {event ? `Edit ${event.title}` : "Edit event"}
+          {event ? `Edit ${event.title}` : "Edit Event"}
         </h1>
         <Link to={`/events/${id}`} className={styles.backBtn}>
           ← Back
@@ -91,21 +94,11 @@ export default function EditEventPage() {
 
       {!loading && event && (
         <div className={styles.card}>
-          <RecurringToggle
-            initialValue={event.recurring}
-            disabled={submitting}
-          />
           <ReminderForm
             initial={initial}
             onSubmit={handleSubmit}
             submitting={submitting}
           />
-          {/* make the Button Components to fix this */}
-          {/* <div className={styles.actions}>
-            <button type="submit" disabled={submitting}>
-              {submitting ? "Saving…" : "Save changes"}
-            </button>
-          </div> */}
         </div>
       )}
     </section>
