@@ -1,9 +1,12 @@
 // src/components/Footer/Footer.jsx
+import { useNavigate } from "react-router-dom";
 import { logOut } from '../../utilities/users-service';
 export default function Footer({ user, setUser }) {
+const navigate = useNavigate();
  function handleLogOut() {
  logOut();
  setUser(null);
+ navigate("/"); // always redirect to home after logout
 }
   return (
     <footer className="footer">
