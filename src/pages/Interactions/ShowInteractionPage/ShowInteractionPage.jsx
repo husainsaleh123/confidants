@@ -28,7 +28,6 @@ export default function ShowInteractionPage() {
 
   const item = useMemo(() => {
     if (!doc) return null;
-    // Adapt backend doc → InteractionCard shape
     const friends = (doc.friendsInvolved || []).map((f) => ({
       _id: f?._id || String(f),
       name: f?.name || "Friend",
@@ -50,9 +49,13 @@ export default function ShowInteractionPage() {
   }, [doc]);
 
   async function handleDelete() {
-    if (!confirm("Delete this interaction?")) return;
-    await deleteInteraction(id);
-    nav("/interactions");
+    try {
+      await deleteInteraction(id);
+      nav("/interactions");
+    } catch (e) {
+      console.error(e);
+      setErr("Failed to delete interaction.");
+    }
   }
 
   if (loading) return <p>Loading…</p>;

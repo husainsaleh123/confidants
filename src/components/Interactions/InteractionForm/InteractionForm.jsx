@@ -1,13 +1,16 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./InteractionForm.module.scss";
 import FriendSelector from "../../Stories/FriendSelector/FriendSelector";
 import InteractionTypeSelector from "../InteractionTypeSelector/InteractionTypeSelector";
+
 export default function InteractionForm({
   initialData = {},                // { friendsInvolved, date, type, notes }
   heading = "Add Interaction",
   submitLabel = "Save",
   onSubmit,                        // async (payload) => {}
 }) {
+  const nav = useNavigate(); // ← added
   const [friendsInvolved, setFriendsInvolved] = useState(
     initialData.friendsInvolved || []
   );
@@ -32,12 +35,11 @@ export default function InteractionForm({
     e.preventDefault();
     setError("");
 
-    // Basic client validation
     if (!type) return setError("Please select an interaction type.");
     if (!date) return setError("Please pick a date.");
 
     const payload = {
-      friendsInvolved,               // array of Friend _ids
+      friendsInvolved,
       type,
       notes: notes?.trim() || "",
       date: date ? new Date(date) : undefined,
@@ -55,6 +57,10 @@ export default function InteractionForm({
 
   return (
     <div className={styles.wrapper}>
+      <header style={{ marginBottom: "12px" }}>
+        <button onClick={() => nav(-1)}>← Go Back</button>
+      </header>
+
       <h2 className={styles.title}>{heading}</h2>
 
       <div className={styles.card}>
