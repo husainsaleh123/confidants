@@ -4,11 +4,8 @@ import { getUserFriends } from "../../../utilities/friends-api";
 import styles from "./ReminderForm.module.scss";
 import FriendSelector from "../../../components/Stories/FriendSelector/FriendSelector"; 
 import RecurringToggle from "../RecurringToggle/RecurringToggle";
-/**
- * ReminderForm
- * Add / Edit Reminders
- * Fields: title, description, date, time, recurring
- */
+
+
 function normalizeDate(val) {
   if (!val) return "";
   const d = new Date(val);
@@ -20,7 +17,7 @@ function normalizeDate(val) {
 }
 
 export default function ReminderForm({ onSubmit, submitting, initial, submitLabel }) {
-  // Remove friendsInvolved state, use form.friends instead
+  
   const location = useLocation();
   let autoLabel = "Save";
   if (location.pathname.includes("/events/new")) autoLabel = "Save Event";
@@ -41,7 +38,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
     friends: [],
   });
 
-  // If initial changes (e.g. when editing), update form state
+
   useEffect(() => {
     if (initial) {
       setForm({
@@ -82,20 +79,20 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
   }
 
 
-  // For FriendSelector, update form.friends directly
+
   function handleFriendSelectorChange(selected) {
     update("friends", selected);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Ensure friends from FriendSelector are included
+
     onSubmit?.({ ...form });
   }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      {/* Top row: title + description */}
+      
       <div className={styles.identityRow}>
         <div className={styles.nameCol}>
           <label className={styles.label}>
@@ -139,7 +136,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
           />
         </label>
       </div>
-      {/* Friends */}
+      {/* Notess */}
         <div className={styles.identityRow}>
         <div className={styles.nameCol}></div>
 
@@ -169,7 +166,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
       <RecurringToggle
         value={typeof form.recurring === 'object' ? form.recurring : { enabled: !!form.recurring && form.recurring !== 'never', interval: form.recurring && form.recurring !== 'never' ? form.recurring : 'yearly' }}
         onChange={(val) => {
-          // If enabled, set to interval string, else set to 'never'
+         
           update('recurring', val.enabled ? val.interval : 'never');
         }}
         disabled={submitting}
@@ -177,7 +174,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
       </div>
       
 
-      {/* Actions */}
+     
       <div className={styles.actions}>
         <button
           className={styles.submitBtn}

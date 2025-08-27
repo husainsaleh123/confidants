@@ -36,7 +36,7 @@ export default function ShowEventPage() {
   async function handleRemove() {
     try {
       await deleteEvent(id);
-      navigate("/events"); // back to EventRemindersPage after deletion
+      navigate("/events"); 
     } catch (e) {
       setError(e?.message || "Failed to Remove Event.");
     }
@@ -44,7 +44,7 @@ export default function ShowEventPage() {
 
   return (
     <section className={styles.page}>
-      {/* Header actions */}
+      
       <div className={styles.actionsBar}>
         <Link to="/events" className={styles.backBtn}>← Back</Link>
         <div className={styles.spacer} />

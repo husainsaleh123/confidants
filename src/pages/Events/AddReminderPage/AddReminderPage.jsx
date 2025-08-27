@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "./AddReminderPage.module.scss";
 import ReminderForm from "../../../components/Events/ReminderForm/ReminderForm";
 import RecurringToggle from "../../../components/Events/RecurringToggle/RecurringToggle";
-// import { Button } from "../../../components/Button/Button"; 
+
 import { createEvent } from "../../../utilities/events-api";
 
 export default function AddEventPage() {
@@ -39,22 +39,15 @@ export default function AddEventPage() {
     <section className={styles.page}>
       <div className={styles.headerRow}>
         <h1 className={styles.title}>Add a New Event </h1>
-        {/* <Link to="/events" className={styles.backBtn}>
-          ← Back to all Events
-        </Link> */}
+    
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
 
       <div className={styles.card}>
-        {/* <RecurringToggle /> */}
         <ReminderForm onSubmit={handleSubmit} submitting={submitting} />
-        {/* make the Button component to fix this */}
         <div className={styles.actions}>
-          {/* <button type="submit" > */}
-            {/* {submitting ? "Saving..." : "Save Reminder"} */}
-            {/* save
-         </button> */}
+        
         </div>
       </div>
     </section>
