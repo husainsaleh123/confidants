@@ -23,7 +23,7 @@ $brand: #2E46FF;
 .backBtn {
   border: 1.5px solid $brand;
   color: $brand;
-  background: #883838;
+  background: #ebebeb;
   border-radius: 9999px;
   padding: 0.55rem 0.9rem;
   text-decoration: none;
@@ -45,13 +45,13 @@ $brand: #2E46FF;
 }
 
 .card {
-  background: #000000;
+  background: #ffffff;
   border: 1px solid #eef0f4;
   border-radius: 18px;
   padding: 1.1rem;
   box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.02),
-    0 10px 24px rgba(17, 24, 39, 0.06);
+    0 1px 1px rgba(253, 253, 253, 0.89),
+    0 10px 24px rgb(255, 254, 254);
   display: grid;
   gap: 1rem;
 }

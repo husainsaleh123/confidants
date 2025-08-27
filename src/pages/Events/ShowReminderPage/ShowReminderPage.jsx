@@ -48,12 +48,7 @@ export default function ShowEventPage() {
       <div className={styles.actionsBar}>
         <Link to="/events" className={styles.backBtn}>← Back</Link>
         <div className={styles.spacer} />
-        <div className={styles.rightActions}>
-          <Link to={`/events/${id}/edit`} className={styles.editBtn}>Edit event</Link>
-          <button type="button" className={styles.removeBtn} onClick={handleRemove}>
-            Remove event
-          </button>
-        </div>
+        
       </div>
 
       {loading && <p className={styles.muted}>Loading…</p>}
@@ -62,6 +57,13 @@ export default function ShowEventPage() {
       {!loading && !error && event && (
         <ReminderCard reminder={event} />
       )}
+
+      <div className={styles.rightActions}>
+          <Link to={`/events/${id}/edit`} className={styles.editBtn}>Edit event</Link>
+          <button type="button" className={styles.removeBtn} onClick={handleRemove}>
+            Remove event
+          </button>
+        </div>
     </section>
   );
 }

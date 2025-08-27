@@ -101,11 +101,11 @@ export default function EditEventPage() {
             submitting={submitting}
           />
           {/* make the Button Components to fix this */}
-          <div className={styles.actions}>
+          {/* <div className={styles.actions}>
             <button type="submit" disabled={submitting}>
               {submitting ? "Saving…" : "Save changes"}
             </button>
-          </div>
+          </div> */}
         </div>
       )}
     </section>
