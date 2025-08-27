@@ -89,12 +89,16 @@ a:hover {
   color: #747bff;
 }
 
-body {
+html, body, #root {
+  height: 100%; /* full viewport height */
+  width: 100%;
   margin: 0;
+}
+
+body {
   display: flex;
-  place-items: center;
+  flex-direction: column; /* allows App to stretch */
   min-width: 320px;
-  min-height: 100vh;
   background-color: #ffffff;
   color: #213547;
 }
@@ -121,4 +125,12 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Make App component take full screen */
+.App {
+  flex: 1;           /* fill available vertical space */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* fallback for very small viewports */
 }
