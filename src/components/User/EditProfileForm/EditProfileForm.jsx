@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./EditProfileForm.module.scss";
+import React, { useState } from "react";
+// import styles from "./EditProfileForm.module.scss"; // keep/remove as you prefer
 
 export default function EditProfileForm({ user = {}, onSubmit, setUser }) {
   const [name, setName] = useState(user.name || "");
@@ -21,29 +21,19 @@ export default function EditProfileForm({ user = {}, onSubmit, setUser }) {
       fd.append("name", name);
       fd.append("email", email);
       if (password) fd.append("password", password);
-      if (photo) fd.append("avatar", photo);
+      if (photo) fd.append("avatar", photo); // change to 'profilePic' if your API expects that
 
-      let result;
-      if (onSubmit) {
-        result = await onSubmit(fd);
-      } else {
-        // Fallback: call your API directly (adjust endpoint/method as needed)
-        const res = await fetch("/api/users", { method: "PUT", body: fd });
-        if (!res.ok) throw new Error("Update failed");
-        result = await res.json();
-      }
-
-      if (setUser && result) {
-        setUser(result.user || result);
-      }
+      const result = await onSubmit(fd); // parent handles API
+      if (setUser && result) setUser(result.user || result);
     } catch (err) {
-      setError(err.message || "Update failed");
+      setError(err?.message || "Update failed");
     }
   };
 
   return (
     <div>
       <h2>Edit your profile, {user.name || "User"}.</h2>
+
       <form onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
         <label>Upload photo</label>
         <input type="file" name="avatar" accept="image/*" onChange={handleFileChange} />
@@ -60,7 +50,7 @@ export default function EditProfileForm({ user = {}, onSubmit, setUser }) {
         <button type="submit">Save changes</button>
       </form>
 
-      <p>{error}</p>
+      {error ? <p>{error}</p> : null}
     </div>
   );
 }
