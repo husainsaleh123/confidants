@@ -18,7 +18,7 @@ Confidants helps users track their social connections, log interactions, share s
 
 ## Sign Up Page
 
-![](src\assets\images\signuppage.png)
+![](https://i.imgur.com/zfQ3MDH.png)
 
 ## Tech Stack
 
