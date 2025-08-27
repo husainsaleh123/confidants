@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { getUserFriends } from "../../../utilities/friends-api";
 import styles from "./ReminderForm.module.scss";
-
+import FriendSelector from "../../../components/Stories/FriendSelector/FriendSelector"; 
+import RecurringToggle from "../RecurringToggle/RecurringToggle";
 /**
  * ReminderForm
  * Add / Edit Reminders
@@ -19,6 +20,7 @@ function normalizeDate(val) {
 }
 
 export default function ReminderForm({ onSubmit, submitting, initial, submitLabel }) {
+  // Remove friendsInvolved state, use form.friends instead
   const location = useLocation();
   let autoLabel = "Save";
   if (location.pathname.includes("/events/new")) autoLabel = "Save Event";
@@ -28,14 +30,14 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
     description: initial.description || "",
     date: normalizeDate(initial.date),
     type: initial.type || "",
-    recurring: initial.recurring || false,
+    recurring: initial.recurring || "",
     friends: initial.friends || [],
   } : {
     title: "",
     description: "",
     date: "",
     type: "",
-    recurring: false,
+    recurring: "",
     friends: [],
   });
 
@@ -47,7 +49,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
         description: initial.description || "",
         date: normalizeDate(initial.date),
         type: initial.type || "",
-        recurring: initial.recurring || false,
+        recurring: initial.recurring || "",
         friends: initial.friends || [],
       });
     }
@@ -79,15 +81,16 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
     setForm((f) => ({ ...f, [k]: v }));
   }
 
-  function handleFriendChange(e) {
-    const options = Array.from(e.target.selectedOptions);
-    const ids = options.map((opt) => opt.value);
-    update("friends", ids);
+
+  // For FriendSelector, update form.friends directly
+  function handleFriendSelectorChange(selected) {
+    update("friends", selected);
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    onSubmit?.(form);
+    // Ensure friends from FriendSelector are included
+    onSubmit?.({ ...form });
   }
 
   return (
@@ -113,7 +116,7 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
               className={styles.input}
               value={form.description}
               onChange={(e) => update("description", e.target.value)}
-              placeholder="Optional details about this reminder"
+              placeholder="Optional details about this Event Reminders"
             />
           </label>
         </div>
@@ -145,58 +148,27 @@ export default function ReminderForm({ onSubmit, submitting, initial, submitLabe
           />
         </label>
       </div>
-
-      <div className={styles.grid}>
-        <label className={styles.label}>
-          Friends
-          {loadingFriends ? (
-            <span className={styles.hint}>Loading friends…</span>
-          ) : friendsError ? (
-            <span className={styles.hint} style={{ color: '#ef4444' }}>{friendsError}</span>
-          ) : (
-            <select
-              className={styles.input}
-              multiple
-              value={form.friends}
-              onChange={handleFriendChange}
-            >
-              {friends.map((f) => (
-                <option key={f._id} value={f._id}>
-                  {f.name} {f.nickName ? `(@${f.nickName})` : ""}
-                </option>
-              ))}
-            </select>
-          )}
-          <span className={styles.hint}>Hold Ctrl (Windows) or Cmd (Mac) to select multiple friends</span>
-        </label>
+ {/* Friends */}
+      <div className={styles.row}>
+        <label className={styles.label}>Friends</label>
+        <div className={styles.controlRight}>
+          <FriendSelector value={form.friends} onChange={handleFriendSelectorChange} />
+        </div>
       </div>
 
-      {/* Tags
-      <div className={styles.row}>
-        <label className={styles.label}>
-          Tags
-          <input
-            className={styles.input}
-            type="text"
-            value={form.tags}
-            onChange={(e) => update("tags", e.target.value)}
-            placeholder="e.g., health, family, work"
-          />
-          <p className={styles.hint}>Separate with commas</p>
-        </label>
-      </div> */}
 
       {/* Recurring toggle */}
       <div className={styles.row}>
-        <label className={styles.labelInline}>
-          <input
-            type="checkbox"
-            checked={form.recurring}
-            onChange={(e) => update("recurring", e.target.checked)}
-          />
-          <span>Repeat this reminder</span>
-        </label>
+      <RecurringToggle
+        value={typeof form.recurring === 'object' ? form.recurring : { enabled: !!form.recurring && form.recurring !== 'never', interval: form.recurring && form.recurring !== 'never' ? form.recurring : 'yearly' }}
+        onChange={(val) => {
+          // If enabled, set to interval string, else set to 'never'
+          update('recurring', val.enabled ? val.interval : 'never');
+        }}
+        disabled={submitting}
+      />
       </div>
+      
 
       {/* Actions */}
       <div className={styles.actions}>

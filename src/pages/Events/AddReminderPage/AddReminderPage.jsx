@@ -20,19 +20,16 @@ export default function AddEventPage() {
         title: form.title,
         date: form.date || null,
         type: form.type || "",
+        friends : form.friends || [] ,
         description: form.description || "",
-        recurring: form.recurring || false,
-        // tags: (form.tags || "")
-        //   .split(",")
-        //   .map((t) => t.trim())
-        //   .filter(Boolean),
+        recurring: typeof form.recurring === 'object' ? (form.recurring.enabled ? form.recurring.interval : 'never') : form.recurring || 'never',
       };
 
       const created = await createEvent(payload);
       if (created && created._id) navigate(`/events/${created._id}`);
       else navigate("/events");
     } catch (e) {
-      setError(e?.message || "Failed to add reminder.");
+      setError(e?.message || "Failed to add Event Reminders.");
     } finally {
       setSubmitting(false);
     }
@@ -41,16 +38,16 @@ export default function AddEventPage() {
   return (
     <section className={styles.page}>
       <div className={styles.headerRow}>
-        <h1 className={styles.title}>Add a new reminder</h1>
+        <h1 className={styles.title}>Add a New Event </h1>
         <Link to="/events" className={styles.backBtn}>
-          ← Back to all events
+          ← Back to all Events
         </Link>
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
 
       <div className={styles.card}>
-        <RecurringToggle />
+        {/* <RecurringToggle /> */}
         <ReminderForm onSubmit={handleSubmit} submitting={submitting} />
         {/* make the Button component to fix this */}
         <div className={styles.actions}>

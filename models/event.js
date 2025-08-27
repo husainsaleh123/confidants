@@ -7,7 +7,7 @@ const eventSchema = new Schema({
     date: { type: Date, required: true },
     type: { type: String, required: true },
     friends: [{ type: Schema.Types.ObjectId, ref: 'Friend' }],
-    recurring: { type: String, default: 'never' },
+    recurring: { type: String, required: true },
     notified: { type: Boolean, default: false },
     description: { type: String },
     author: { type:Schema.Types.ObjectId, ref: 'User' },

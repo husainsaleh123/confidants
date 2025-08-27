@@ -46,14 +46,12 @@ export default function EventRemindersPage() {
   return (
     <section className={styles.page}>
       <div className={styles.topbar}>
-        <button className={styles.backBtn} onClick={() => navigate(-1)}>
-          ← Back
-        </button>
+       
         <p className={styles.count}>
-          You have {reminders.length} reminder{reminders.length === 1 ? "" : "s"}!
+          You have {reminders.length} Event Reminder{reminders.length === 1 ? "" : "s"}!
         </p>
         <Link to="/events/new" className={styles.addBtn}>
-          + Add reminder
+          + Add Event Reminders
         </Link>
       </div>
 
@@ -62,7 +60,7 @@ export default function EventRemindersPage() {
         <div className={styles.controls}>
           <input
             type="search"
-            placeholder="Search reminders..."
+            placeholder="Search Event Reminders..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className={styles.search}
@@ -76,7 +74,7 @@ export default function EventRemindersPage() {
       {!loading && !error && (
         <div className={styles.content}>
           {filtered.length === 0 ? (
-            <p className={styles.muted}>No reminders found.</p>
+            <p className={styles.muted}>No Event Reminders found.</p>
           ) : (
             <ReminderList reminders={filtered} showViewButton />
           )}

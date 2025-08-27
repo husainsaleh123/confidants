@@ -24,7 +24,7 @@ async function create(req, res) {
             date: req.body.date,
             type: req.body.type,
             friends: req.body.friends || undefined,
-            recurring: req.body.recurring || 'never',
+            recurring: req.body.recurring || '',
             notified: req.body.notified || false,
             description: req.body.description || '',
             author:req.user._id

@@ -1,3 +1,4 @@
+import RecurringToggle from "../RecurringToggle/RecurringToggle";
 import styles from "./ReminderCard.module.scss";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ import { Link } from "react-router-dom";
 export default function ReminderCard({ reminder, showViewButton = false }) {
   if (!reminder) return null;
 
-  const { _id, id, title, date, type, description, friends = [] } = reminder;
+  const { _id, id, title, date, type, description ,recurring,friends= [] } = reminder;
 
   return (
     <div className={styles.card}>
@@ -33,11 +34,17 @@ export default function ReminderCard({ reminder, showViewButton = false }) {
         <div className={styles.friends}>
           <strong>With:</strong>{" "}
           {friends.map((f) => {
-            if (typeof f === "string") return "[Friend]";
-            return f.name || f.nickName || "[Friend]";
-          }).join(", ")}
+            if (typeof f === "string") return <span key={f}>[Friend]</span>;
+            return <span key={f._id || f.name || f.nickName}>{f.name || f.nickName || "[Friend]"}</span>;
+          }).reduce((prev, curr) => [prev, ", ", curr])}
         </div>
       )}
+
+       {recurring && typeof recurring === 'string' && !['never', 'false', ''].includes(recurring.toLowerCase()) && (
+         <div className={styles.type}>
+           <strong>Recurring:</strong> {recurring.charAt(0).toUpperCase() + recurring.slice(1)}
+         </div>
+       )}
 
       {showViewButton && (
         <div className={styles.actions}>
