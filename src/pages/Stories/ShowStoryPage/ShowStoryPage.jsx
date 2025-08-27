@@ -1,7 +1,7 @@
-// src/pages/Stories/ShowStoryPage/ShowStoryPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
-import { getToken } from "../../../utilities/users-service"; // for authenticated raw requests
+import { getToken } from "../../../utilities/users-service";
+import styles from "./ShowStoryPage.module.scss";
 
 export default function ShowStoryPage() {
   const { id } = useParams();
@@ -10,7 +10,6 @@ export default function ShowStoryPage() {
 
   const idOf = (s) => s?._id || s?.id;
 
-  // Prefer the story passed via navigation state; fall back to local cache
   const [story, setStory] = useState(() => location.state?.story || null);
 
   useEffect(() => {
@@ -20,18 +19,14 @@ export default function ShowStoryPage() {
     const readJSON = (k) => {
       try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; }
     };
-
     const extras = readJSON("stories:extras") || [];
     const snapshot = readJSON("stories:lastSnapshot") || [];
     const lastNew = readJSON("lastNewStory");
-
     const all = [...extras, ...snapshot, ...(lastNew ? [lastNew] : [])];
     const found = all.find((s) => String(idOf(s)) === String(id));
-
     if (found) setStory(found);
   }, [id, story]);
 
-  // Image helpers
   const allImages = useMemo(() => {
     if (!story) return [];
     if (Array.isArray(story.photos) && story.photos.length) return story.photos.filter(Boolean);
@@ -42,7 +37,6 @@ export default function ShowStoryPage() {
     return [];
   }, [story]);
 
-  // Optional: resolve friend IDs -> names if the story only has IDs
   const [friendIndex, setFriendIndex] = useState(null);
   useEffect(() => {
     let active = true;
@@ -54,8 +48,7 @@ export default function ShowStoryPage() {
     if (hasNames) return;
 
     async function loadFriends() {
-      const readJSON = (k) => {
-        try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; }
+      const readJSON = (k) => { try { const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : null; } catch { return null; };
       };
       const cached = readJSON("friends:index");
       if (cached && active) {
@@ -75,14 +68,13 @@ export default function ShowStoryPage() {
         const map = new Map((list || []).map((f) => [String(f?._id || f?.id), f]));
         setFriendIndex(map);
         try { localStorage.setItem("friends:index", JSON.stringify(list || [])); } catch {}
-      } catch { /* ignore */ }
+      } catch {}
     }
 
     loadFriends();
     return () => { active = false; };
   }, [story]);
 
-  // Formatters
   const fmtDate = (d) => {
     const dt = d ? new Date(d) : null;
     if (!dt || Number.isNaN(dt.getTime())) return "";
@@ -96,7 +88,6 @@ export default function ShowStoryPage() {
     return `${datePart}, ${timePart}`;
   };
 
-  // Friend labels from objects or resolved IDs
   const friends = useMemo(() => {
     const arr = story?.friendsInvolved || [];
     const labelOf = (f) => {
@@ -113,9 +104,11 @@ export default function ShowStoryPage() {
 
   if (!story) {
     return (
-      <main>
-        <p>Story not found.</p>
-        <p><Link to="/stories">← Back to all stories</Link></p>
+      <main className={styles.page}>
+        <div className={styles.container}>
+          <p>Story not found.</p>
+          <p><Link to="/stories">← Back to all stories</Link></p>
+        </div>
       </main>
     );
   }
@@ -131,7 +124,6 @@ export default function ShowStoryPage() {
     navigate("/stories");
   }
 
-  // Delete: treat 404/"not found" as success to clean up ghost stories
   async function handleDelete() {
     if (!sid) {
       alert("Missing story id.");
@@ -171,54 +163,98 @@ export default function ShowStoryPage() {
   }
 
   return (
-    <main>
-      <h1>{story.title || "Untitled story"}</h1>
+    <main className={styles.page}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>{story.title || "Untitled story"}</h1>
 
-      {/* Images */}
-      {allImages.length > 0 && (
-        <section>
-          {/* primary image */}
-          <img src={allImages[0]} alt={story.title ? `${story.title} photo 1` : "story photo"} />
-          {/* additional images */}
-          {allImages.slice(1).map((src, i) => (
-            <img key={i} src={src} alt={story.title ? `${story.title} photo ${i + 2}` : `story photo ${i + 2}`} />
-          ))}
+        <section className={styles.card}>
+          {/* LEFT: media */}
+          <div className={styles.media}>
+            <img
+              className={styles.cover}
+              src={allImages[0] || ""}
+              alt={story.title ? `${story.title} photo 1` : "story photo"}
+              onError={(e) => (e.currentTarget.style.visibility = "hidden")}
+            />
+            {allImages.length > 1 && (
+              <div className={styles.thumbRow}>
+                {allImages.slice(1).map((src, i) => (
+                  <img key={i} className={styles.thumb} src={src} alt={`thumb ${i + 2}`} />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: details */}
+          <div className={styles.content}>
+            {story.date && (
+              <div className={styles.metaLine}>
+                <span className={styles.metaLabel}>Date:</span> {fmtDate(story.date)}
+              </div>
+            )}
+
+            {story.content && <div className={styles.body}>{story.content}</div>}
+
+            {friends.length > 0 && (
+              <div className={styles.metaLine}>
+                <span className={styles.metaLabel}>Friends involved:</span>
+                <div className={styles.tags}>
+                  {friends.map((f, i) => (
+                    <span className={`${styles.tag} ${styles.friendTag}`} key={`${f}-${i}`}>{f}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Moods: array or single */}
+            {Array.isArray(story.moods) && story.moods.length > 0 && (
+              <div className={styles.metaLine}>
+                <span className={styles.metaLabel}>Mood:</span>
+                <div className={styles.tags}>
+                  {story.moods.map((m, i) => (
+                    <span className={styles.tag} key={`${m}-${i}`}>{m}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!Array.isArray(story.moods) && story.mood && (
+              <div className={styles.metaLine}>
+                <span className={styles.metaLabel}>Mood:</span>
+                <div className={styles.tags}>
+                  <span className={styles.tag}>{story.mood}</span>
+                </div>
+              </div>
+            )}
+
+            {story.createdAt && (
+              <div className={styles.metaLine}>
+                Logged on {fmtLogged(story.createdAt)}
+              </div>
+            )}
+
+            <div className={styles.actions}>
+              <button type="button" className={`${styles.btn} ${styles.btnBack}`} onClick={() => navigate("/stories")}>
+                &larr; Back
+              </button>
+              {sid && (
+                <>
+                  <button
+                    type="button"
+                    className={`${styles.btn} ${styles.btnEdit}`}
+                    onClick={() => navigate(`/stories/${sid}/edit`, { state: { story } })}
+                  >
+                    Edit story
+                  </button>
+                  <button type="button" className={`${styles.btn} ${styles.btnDanger}`} onClick={handleDelete}>
+                    Remove story
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
         </section>
-      )}
 
-      {story.date && <p><strong>Date:</strong> {fmtDate(story.date)}</p>}
-
-      {friends.length > 0 && (
-        <p>
-          <strong>Friends involved:</strong> {friends.join(", ")}
-        </p>
-      )}
-
-      {Array.isArray(story.moods) && story.moods.length > 0 && (
-        <p><strong>Mood:</strong> {story.moods.join(", ")}</p>
-      )}
-      {typeof story.mood === "string" && story.mood && (
-        <p><strong>Mood:</strong> {story.mood}</p>
-      )}
-
-      {story.content && <p>{story.content}</p>}
-      {story.createdAt && <p>Logged on {fmtLogged(story.createdAt)}</p>}
-
-      <div>
-        <button type="button" onClick={() => navigate("/stories")}>Back</button>{" "}
-        {sid && (
-          <>
-            <button
-              type="button"
-              onClick={() => navigate(`/stories/${sid}/edit`, { state: { story } })}
-            >
-              Edit story
-            </button>{" "}
-            <button type="button" onClick={handleDelete}>
-              Remove story
-            </button>
-          </>
-        )}
+        <p className={styles.footerNote}></p>
       </div>
     </main>
   );
