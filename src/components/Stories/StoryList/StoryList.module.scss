@@ -1,0 +1,136 @@
+/* Page shell */
+.wrapper {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 8px 16px 40px;
+}
+
+/* Page title (centered) */
+.pageTitle {
+  margin: 18px 0 20px;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #152238;
+}
+
+/* Card container */
+.card {
+  background: #f3f4f7;         /* light grey like mock */
+  border: 1px solid #e2e5ec;
+  border-radius: 12px;
+  padding: 18px 18px 22px;
+}
+
+/* The form grid is one column on mobile; labels align left, fields full width */
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* Each logical row */
+.row {
+  display: grid;
+  grid-template-columns: 160px 1fr; /* label - control */
+  align-items: center;
+  gap: 14px;
+
+  /* On very small screens, stack */
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* Left-side labels */
+.label {
+  color: #2a3447;
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+/* Right-side control wrapper (used where the control is a component) */
+.controlRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #cfd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.95rem;
+  outline: none;
+
+  &:focus {
+    border-color: #6d77ff;
+    box-shadow: 0 0 0 3px rgba(109, 119, 255, 0.12);
+  }
+}
+
+/* Textarea */
+.textarea {
+  width: 100%;
+  min-height: 110px;
+  padding: 10px 12px;
+  border: 1px solid #cfd5e1;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  resize: vertical;
+
+  &:focus {
+    border-color: #6d77ff;
+    box-shadow: 0 0 0 3px rgba(109, 119, 255, 0.12);
+  }
+}
+
+/* Actions row */
+.actions {
+  margin-top: 6px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Primary button */
+.submitBtn {
+  min-width: 220px;
+  height: 42px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #3c43ff;          /* purple/indigo like mockup button */
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(60, 67, 255, 0.18);
+    background: #353be6;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.75;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Error text */
+.error {
+  margin-top: 10px;
+  color: #d12c2c;
+  text-align: center;
+  font-size: 0.92rem;
+}

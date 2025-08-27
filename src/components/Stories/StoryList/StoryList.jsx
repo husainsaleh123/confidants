@@ -1,10 +1,12 @@
+// src/components/Stories/StoryList/StoryList.jsx
 import React, { useMemo } from "react";
 import StoryCard from "../StoryCard/StoryCard";
+import styles from "./StoryList.module.scss";
 
 export default function StoryList({
   stories = [],
   filters = {},
-  sortOrder = "recent", // "recent" (default) or "oldest"
+  sortOrder = "recent", // "recent" or "oldest"
   onCardClick,
 }) {
   const asDate = (d) => {
@@ -85,18 +87,24 @@ export default function StoryList({
   }, [stories, filters, sortOrder]);
 
   if (!filteredAndSorted.length) {
-    return <p>No stories found.</p>;
+    return (
+      <div className={styles.empty}>
+        <p>No stories found.</p>
+      </div>
+    );
   }
 
   return (
-    <div>
-      {filteredAndSorted.map((story) => (
-        <StoryCard
-          key={story._id || story.id}
-          story={story}
-          onClick={onCardClick}
-        />
-      ))}
-    </div>
+    <section className={styles.wrapper}>
+      <div className={styles.grid}>
+        {filteredAndSorted.map((story) => (
+          <StoryCard
+            key={story._id || story.id}
+            story={story}
+            onClick={onCardClick}
+          />
+        ))}
+      </div>
+    </section>
   );
 }

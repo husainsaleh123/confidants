@@ -1,80 +1,225 @@
+/* Page shell */
 .wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px 16px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 10px 16px 36px;
 }
 
-.pageTitle {
-  margin: 16px 0 24px;
+/* Back link row */
+.headerRow {
+  margin: 6px 0 14px;
+}
+
+.linkBtn {
+  appearance: none;
+  border: none;
+  background: none;
+  color: #5a63ff;
   font-weight: 600;
-  text-align: center;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1.2;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
-.card {
+/* Two-column grid (media | body) */
+.grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 18px;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Media column */
+.media {}
+
+/* Large cover */
+.cover {
   width: 100%;
-  max-width: 720px;
-  border-radius: 8px;
-  background: #f4f4f4;
-  padding: 24px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #e4e7ef;
+  background: #f0f2f6;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* Thumbnails row */
+.thumbs {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.row {
+.thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e6e8f0;
+  background: #f6f7fb;
+}
+
+/* No-photo placeholder */
+.noPhoto {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  border: 1px dashed #d3d7e3;
+  background: #fafbff;
+  display: grid;
+  place-items: center;
+  color: #79809c;
+  font-size: 0.95rem;
+}
+
+/* Body column */
+.body {}
+
+/* Title */
+.title {
+  margin: 4px 0 6px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #172335;
+}
+
+/* Meta (date) */
+.metaRow {
+  margin: 0 0 8px;
+  color: #424a5c;
+  font-size: 0.98rem;
+
+  strong {
+    color: #273049;
+  }
+}
+
+/* Content paragraph */
+.content {
+  margin: 10px 0 14px;
+  color: #2c3446;
+  line-height: 1.55;
+}
+
+/* Group blocks (friends / moods) */
+.group {
+  margin: 10px 0;
+}
+
+.groupTitle {
+  margin-bottom: 6px;
+  color: #2a3145;
+}
+
+/* Friends inline links */
+.friendList {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.friendLink {
+  color: #1f5bd8;
+  text-decoration: none;
+  padding: 2px 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Mood chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
-.label {
-  font-size: 14px;
-}
-
-.input,
-.textarea,
-.select {
-  width: 100%;
-  border: 1px solid #d1d1d1;
-  border-radius: 6px;
-  padding: 10px 12px;
-  outline: none;
-  background: #fff;
-}
-
-.controlRight {
-  display: flex;
+.chip {
+  display: inline-flex;
   align-items: center;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 8px;
-}
-
-.submitBtn {
-  min-width: 220px;
-  padding: 12px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: #4f46e5; /* primary */
-  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef1ff;
+  color: #3b44dd;
+  border: 1px solid #dfe3fe;
+  font-size: 0.86rem;
   font-weight: 600;
-  cursor: pointer;
 }
 
-.submitBtn:disabled {
-  opacity: 0.7;
-  cursor: default;
+/* Logged timestamp */
+.logged {
+  margin: 12px 0;
+  color: #56607a;
+  font-size: 0.95rem;
 }
 
-.error {
-  color: #c0392b;
-  text-align: center;
+/* Actions row */
+.actions {
   margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Buttons */
+.btn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.btnSecondary {
+  background: #f3f5fa;
+  border-color: #e1e6f0;
+  color: #24314b;
+
+  &:hover:not(:disabled) {
+    background: #e9edf7;
+  }
+}
+
+.btnPrimary {
+  background: #3c43ff;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: #353be6;
+    box-shadow: 0 6px 16px rgba(60, 67, 255, 0.18);
+    transform: translateY(-1px);
+  }
+}
+
+.btnDanger {
+  background: #e63535;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background: #cf2e2e;
+    box-shadow: 0 6px 16px rgba(230, 53, 53, 0.18);
+    transform: translateY(-1px);
+  }
 }

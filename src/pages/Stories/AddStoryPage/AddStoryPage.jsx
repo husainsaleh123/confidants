@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import StoryForm from "../../../components/Stories/StoryForm/StoryForm";
 import { createStory } from "../../../utilities/stories-api";
+import styles from "./AddStoryPage.module.scss";
 
 export default function AddStoryPage() {
   const navigate = useNavigate();
@@ -9,11 +10,7 @@ export default function AddStoryPage() {
   const [error, setError] = useState("");
 
   const toArray = (v) =>
-    Array.isArray(v)
-      ? v
-      : v == null || v === ""
-      ? []
-      : String(v).split(",").map((s) => s.trim()).filter(Boolean);
+    Array.isArray(v) ? v : v == null || v === "" ? [] : String(v).split(",").map((s) => s.trim()).filter(Boolean);
 
   const idOf = (s) => s?._id || s?.id;
 
@@ -88,15 +85,15 @@ export default function AddStoryPage() {
   }
 
   return (
-    <section>
-      <div>
-        <h1>Add a new story, share a new memory.</h1>
-        <Link to="/stories">← Back to all stories</Link>
+    <section className={styles.page}>
+      <div className={styles.headerRow}>
+        <Link to="/stories" className={styles.backLink}>← Back to all stories</Link>
+        <h1 className={styles.title}>Add a new story, share a new memory.</h1>
       </div>
 
-      {error && <p>{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
 
-      <div>
+      <div className={styles.formWrap}>
         <StoryForm
           initialData={{}}
           heading="Add a new story, share a new memory."
