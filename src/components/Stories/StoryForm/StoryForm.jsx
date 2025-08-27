@@ -80,8 +80,8 @@ export default function StoryForm({
           <div className={styles.row}>
             <label className={styles.label}>Add media</label>
             <div className={styles.controlRight}>
-              <PhotoUploader files={files} onChange={setFiles} />
-            </div>
+             <PhotoUploader files={files} onChange={setFiles} className={styles.linkBtn} />
+          </div>
           </div>
 
           {/* Title */}

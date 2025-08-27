@@ -1,7 +1,7 @@
 // src/components/Stories/PhotoUploader/PhotoUploader.jsx
 import React, { useRef, useState, useEffect } from "react";
 
-export default function PhotoUploader({ value, onChange }) {
+export default function PhotoUploader({ value, onChange, className = "" }) {
   // ref so we can trigger the hidden <input type="file" />
   const fileInputRef = useRef(null);
 
@@ -48,14 +48,11 @@ export default function PhotoUploader({ value, onChange }) {
           />
           <div>
             {/* Trigger file picker again */}
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-            >
+            <button type="button" className={className} onClick={() => fileInputRef.current?.click()}>
               Change photo
             </button>
             {/* Remove/reset */}
-            <button type="button" onClick={handleRemove}>
+            <button type="button" className={className} onClick={handleRemove}>
               Remove photo
             </button>
           </div>
@@ -63,10 +60,7 @@ export default function PhotoUploader({ value, onChange }) {
       ) : (
         // If no preview, show "Upload photo" button
         <div>
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-          >
+         <button type="button" className={className} onClick={() => fileInputRef.current?.click()}>
             Upload photo
           </button>
         </div>
