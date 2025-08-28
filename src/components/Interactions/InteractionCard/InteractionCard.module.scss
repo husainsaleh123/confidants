@@ -8,7 +8,6 @@ $muted: #6b7280;
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
-
     background: #f7f7f8;
     border: 1px solid #e5e7eb;
     border-radius: 16px;
@@ -18,7 +17,7 @@ $muted: #6b7280;
       0 6px 16px rgba(17, 24, 39, .05);
 
     max-width: 720px;
-    margin: 0 auto;
+    margin: 40px auto;
   }
 
   .ix-card--compact {
