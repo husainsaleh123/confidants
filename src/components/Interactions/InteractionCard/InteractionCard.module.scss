@@ -1,153 +1,150 @@
-/* InteractionCard.module.scss */
 $brand: #2E46FF;
 $ink: #0b1b4f;
 $muted: #6b7280;
 
-:global {
-  .ix-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    background: #f7f7f8;
-    border: 1px solid #e5e7eb;
-    border-radius: 16px;
-    padding: 1rem 1rem;
-    box-shadow:
-      0 1px 1px rgba(0, 0, 0, .02),
-      0 6px 16px rgba(17, 24, 39, .05);
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  background: #f7f7f8;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem 1rem;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, .02),
+    0 6px 16px rgba(17, 24, 39, .05);
 
-    max-width: 720px;
-    margin: 40px auto;
-  }
-
-  .ix-card--compact {
-    border-radius: 14px;
-    padding: 0.9rem 0.95rem;
-  }
-
-  .ix-title {
-    font-size: 1.6rem;
-    font-weight: 800;
-    line-height: 1.2;
-    color: #111827;
-    margin: 0 0 .15rem;
-  }
-
-  .ix-date {
-    margin: 0;
-    font-size: .98rem;
-    color: #1f2937;
-
-    strong { font-weight: 800; }
-  }
-
-  .ix-desc {
-    font-size: 1.05rem;
-    color: $ink;
-    line-height: 1.5;
-    margin: .3rem 0 .7rem;
-  }
-
-  .ix-friends {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: .6rem .8rem;
-    align-items: start;
-    margin-top: .2rem;
-
-    > strong {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #111827;
-      padding-top: .15rem;
-    }
-  }
-
-  .ix-friend-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .45rem .55rem;
-  }
-
-  .ix-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: .35rem;
-
-    padding: .45rem .85rem;
-    border-radius: 10px;
-    font-size: .95rem;
-    font-weight: 800;
-    background: #fff;
-    color: $brand;
-    border: 2px solid $brand;
-
-    &:hover { background: #f3f4ff; }
-  }
-
-  .ix-actions {
-    display: flex;
-    align-items: center;
-    gap: .6rem;
-    margin-top: .4rem;
-    flex-wrap: wrap;
-  }
-
-  /* push right cluster (Edit/Delete) to the end */
-  .ix-spacer { flex: 1 1 auto; }
-
-  .ix-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: .65rem 1rem;
-    font-size: .98rem;
-    line-height: 1;
-    border-radius: 12px;
-    font-weight: 800;
-    border: 2px solid transparent;
-    cursor: pointer;
-    text-decoration: none;
-    transition: transform .04s ease, box-shadow .15s ease, background .15s ease;
-
-    &:active { transform: translateY(1px); }
-  }
-
-  .ix-btn-primary {
-    background: $brand;
-    color: #fff;
-    border-color: $brand;
-    box-shadow: 0 8px 20px rgba(46, 70, 255, .22);
-
-    &:hover { box-shadow: 0 10px 24px rgba(46, 70, 255, .28); }
-  }
-
-  .ix-btn-outline {
-    background: #fff;
-    color: #0f172a;
-    border-color: #cdd2e1;
-
-    &:hover { background: #f8fafc; }
-  }
-
-  .ix-btn-ghost {
-    background: transparent;
-    color: #0f172a;
-    border-color: transparent;
-
-    &:hover {
-      background: #f2f4f7;
-      border-color: #e5e7eb;
-    }
-  }
-
-  .ix-btn-danger {
-    background: #b42318;
-    color: #fff;
-    border-color: #b42318;
-
-    &:hover { box-shadow: 0 8px 18px rgba(180, 35, 24, .25); }
-  }
-
-  .muted { color: $muted; }
+  max-width: 720px;
+  margin: 40px auto;
 }
+
+.compact {
+  border-radius: 14px;
+  padding: 0.9rem 0.95rem;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #111827;
+  margin: 0 0 .15rem;
+}
+
+.date {
+  margin: 0;
+  font-size: .98rem;
+  color: #1f2937;
+
+  strong { font-weight: 800; }
+}
+
+.desc {
+  font-size: 1.05rem;
+  color: $ink;
+  line-height: 1.5;
+  margin: .3rem 0 .7rem;
+}
+
+.friends {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .6rem .8rem;
+  align-items: start;
+  margin-top: .2rem;
+
+  > strong {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111827;
+    padding-top: .15rem;
+  }
+}
+
+.friendChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem .55rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+
+  padding: .45rem .85rem;
+  border-radius: 10px;
+  font-size: .95rem;
+  font-weight: 800;
+  background: #fff;
+  color: $brand;
+  border: 2px solid $brand;
+
+  &:hover { background: #f3f4ff; }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-top: .4rem;
+  flex-wrap: wrap;
+}
+
+/* push right cluster (Edit/Delete) to the end */
+.spacer { flex: 1 1 auto; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .65rem 1rem;
+  font-size: .98rem;
+  line-height: 1;
+  border-radius: 12px;
+  font-weight: 800;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform .04s ease, box-shadow .15s ease, background .15s ease;
+
+  &:active { transform: translateY(1px); }
+}
+
+.btnPrimary {
+  background: $brand;
+  color: #fff;
+  border-color: $brand;
+  box-shadow: 0 8px 20px rgba(46, 70, 255, .22);
+
+  &:hover { box-shadow: 0 10px 24px rgba(46, 70, 255, .28); }
+}
+
+.btnOutline {
+  background: #fff;
+  color: #0f172a;
+  border-color: #cdd2e1;
+
+  &:hover { background: #f8fafc; }
+}
+
+.btnGhost {
+  background: transparent;
+  color: #0f172a;
+  border-color: transparent;
+
+  &:hover {
+    background: #f2f4f7;
+    border-color: #e5e7eb;
+  }
+}
+
+.btnDanger {
+  background: #b42318;
+  color: #fff;
+  border-color: #b42318;
+
+  &:hover { box-shadow: 0 8px 18px rgba(180, 35, 24, .25); }
+}
+
+.muted { color: $muted; }
