@@ -16,11 +16,13 @@ export default function AddInteractionPage() {
 
   return (
     <section>
-      <InteractionForm
-        heading="Add Interaction"
-        submitLabel="Add Interaction"
-        onSubmit={handleCreate}
-      />
+      <section className={styles.page}>
+        <InteractionForm
+          heading="Add Interaction"
+          submitLabel="Add Interaction"
+          onSubmit={handleCreate}
+        />
+      </section>
     </section>
   );
 }

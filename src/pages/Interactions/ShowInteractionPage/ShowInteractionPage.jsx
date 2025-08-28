@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteInteraction, getInteraction } from "../../../utilities/interaction-api";
+import {
+  deleteInteraction,
+  getInteraction,
+} from "../../../utilities/interaction-api";
 import InteractionCard from "../../../components/Interactions/InteractionCard/InteractionCard";
 import styles from "./ShowInteractionPage.module.scss";
-
-
-
 
 export default function ShowInteractionPage() {
   const { id } = useParams();
@@ -27,15 +27,19 @@ export default function ShowInteractionPage() {
         if (live) setLoading(false);
       }
     })();
-    return () => (live = false);
+    return () => {
+      live = false;
+    };
   }, [id]);
 
   const item = useMemo(() => {
     if (!doc) return null;
+
     const friends = (doc.friendsInvolved || []).map((f) => ({
       _id: f?._id || String(f),
       name: f?.name || "Friend",
     }));
+
     const friendNames = friends.map((f) => f.name).filter(Boolean);
     const titleFromType =
       doc?.type && friendNames.length
@@ -52,10 +56,12 @@ export default function ShowInteractionPage() {
     };
   }, [doc]);
 
-  async function handleDelete() {
+  // Accept optional id so the card can call onDelete(_id)
+  async function handleDelete(targetId = id) {
     try {
-      await deleteInteraction(id);
+      await deleteInteraction(targetId);
       nav("/interactions");
+      window.location.reload();
     } catch (e) {
       console.error(e);
       setErr("Failed to delete interaction.");
@@ -67,18 +73,27 @@ export default function ShowInteractionPage() {
   if (!item) return <p>Interaction not found.</p>;
 
   return (
-    <section>
-      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <button onClick={() => nav("/interactions")}>← Back</button>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={() => nav(`/interactions/${id}/edit`)}>Edit</button>
-          <button onClick={handleDelete} style={{ background: "#b42318", color: "#fff" }}>
+    <section className={styles.page}>
+      {/* Optional top bar (styled in your .module.scss) */}
+      {/* <header className={styles.topbar}>
+        <button className={styles.backBtn} onClick={() => nav("/interactions")}>
+          ← Back
+        </button>
+        <div className={styles.actions}>
+          <button
+            className={styles.editBtn}
+            onClick={() => nav(`/interactions/${id}/edit`)}
+          >
+            Edit
+          </button>
+          <button className={styles.deleteBtn} onClick={() => handleDelete()}>
             Delete
           </button>
         </div>
-      </header>
+      </header> */}
 
-      <InteractionCard item={item} />
+      {/* Card now receives onDelete so its Delete button actually removes it */}
+      <InteractionCard item={item} onDelete={handleDelete} />
     </section>
   );
 }

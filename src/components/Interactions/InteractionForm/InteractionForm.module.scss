@@ -1,143 +1,195 @@
-/* src/components/Interactions/InteractionForm/InteractionForm.module.scss */
-$brand: #2E46FF;
-
-/* page shell */
 .wrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px;
 }
 
-.title {
-  font-size: 1.6rem;
-  font-weight: 900;
-  margin: 0 0 .75rem;
-  color: #0b1b4f;
+.pageTitle {
+  margin: 16px 0 24px;
+  font-weight: 600;
+  text-align: center;
 }
 
-/* grey rounded container like the wireframe */
 .card {
-  background: #f0f1f3;
-  border-radius: 18px;
-  border: 1px solid rgba(0,0,0,.05);
-  padding: 1.25rem;
+  width: 100%;
+  max-width: 720px;
+  border-radius: 8px;
+  background: #f4f4f4;
+  padding: 24px;
 }
 
-/* ====== core layout (similar to your sample) ====== */
 .form {
-  display: grid;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: left;
 }
 
-/* label left, control right */
 .row {
-  display: grid;
-  grid-template-columns: 160px 1fr;   /* like label widths in the sample */
-  gap: 1rem;
-
-  @media (max-width: 720px) {
-    grid-template-columns: 1fr;
-  }
+ width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
 }
 
 .label {
-  display: grid;
-  gap: .35rem;
-  font-weight: 800;
-  align-content: start;
-  color: #111827;
+  font-size: 14px;
 }
 
-/* right column wrapper (helps align complex controls/selectors) */
-.controlRight {
-  display: grid;
-}
-
-/* inputs – mirror padding/border/focus from your sample */
-.input {
+.input,
+.textarea,
+.select {
   width: 100%;
-  padding: .75rem 1rem;
-  border-radius: 12px;
-  border: 1.5px solid #e5e7eb;
-  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 6px;
+  padding: 10px 12px;
   outline: none;
-  transition: box-shadow .15s ease, border-color .15s ease;
-
-  &:focus {
-    border-color: $brand;
-    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
-  }
+  background: #fff;
 }
 
-/* textarea same look & feel */
-.textarea {
-  @extend .input;
-  min-height: 120px;
-  resize: vertical;
-}
-
-/* If InteractionTypeSelector renders a native <select> inside .controlRight */
-.controlRight select {
-  @extend .input;
-  appearance: none; /* keeps it clean; your selector can add an icon if needed */
-}
-
-/* chips from FriendSelector (optional, style common class names) */
 .controlRight {
-  .chip, .friend-chip, .tag {
-    display: inline-flex;
-    align-items: center;
-    gap: .35rem;
-    padding: .45rem .8rem;
-    border-radius: 9999px;
-    font-size: 1rem;
-    font-weight: 800;
-    background: #f3f4ff;
-    color: $brand;
-    border: 1.5px solid rgba(46,70,255,.25);
-    margin: .25rem .35rem .25rem 0;
-  }
-
-  .addBtn {
-    display: inline-flex;
-    align-items: center; justify-content: center;
-    height: 40px; min-width: 40px;
-    padding: 0 .75rem;
-    border-radius: 12px;
-    background: $brand;
-    border: 1.5px solid $brand;
-    color: #fff;
-    font-weight: 900;
-    cursor: pointer;
-  }
+  display: flex;
+  align-items: center;
 }
 
-/* actions & submit button (same spirit as sample) */
 .actions {
   display: flex;
-  justify-content: flex-start;
-  margin-top: .25rem;
+  justify-content: center;
+  margin-top: 8px;
 }
 
 .submitBtn {
-  background: $brand;
+  min-width: 220px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 8px;
+  background: blue; /* primary */
   color: #fff;
-  border: 1.5px solid $brand;
-  border-radius: 9999px;
-  padding: .7rem 1.1rem;
-  line-height: 1;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
-
-  &:disabled {
-    opacity: .7;
-    cursor: default;
-  }
 }
 
-/* error text */
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
 .error {
-  margin-top: .25rem;
-  color: #b00020;
+  color: #c0392b;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.actions {
+  width: 100%;                 /* let the child take 100% */
+  display: block;              /* a normal block is fine */
+  margin-top: 12px;
+}
+
+.submitBtn {
+  width: 100%;                 /* full width */
+  display: block;              /* stretch across the .actions width */
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 10px;
+  background: blue;         /* purple */
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.submitBtn:hover:not(:disabled) { background: #4338ca; }
+.submitBtn:disabled { opacity: .7; cursor: not-allowed; }
+
+.uploadBtn {
+  font-size: 0.9rem;
+  color: blue;
+  border: 1px solid blue;
+  background: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: 4338ca;
+    color: #fff;
+    text-decoration: none; }
+}
+
+.linkBtn {
+  background: #fff;
+  color: blue;
+  border: 1px solid blue;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.linkBtn:hover {
+  background: blue;
+  color: #fff;
+}
+
+/* fields stay centered and 80% width */
+.input,
+.textarea,
+.controlRight {
+  width: 95%;
+  align-items: left;
+  max-width: 720px;
+  margin: 10px auto;
+}
+
+
+/* Friends / Mood line: select + small (+) button */
+.controlRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Style the dropdown like the mock */
+.controlRight :global(select) {
+  flex: 1;
+  height: 36px;
+  padding: 6px 10px;
+  border: 1.5px solid blue;
+  border-radius: 10px;
+  outline: none;
+}
+
+/* The small + button pill */
+.controlRight :global(button) {
+  height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  border: 1.5px solid blue;
+  border-radius: 10px;
+  background: blue;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Keep the main "Add story" button looking like the mock (already centered) */
+.actions {
+  width: 100%;
+  max-width: 720px;
+  margin-top: 30px;
+}
+
+
+/* labels: left-aligned and same 80% width as fields */
+.label {
+  width: 80%;
+  max-width: 720px;
+  align-self: flex-start;      /* <— left align the label */
+  text-align: left;
   font-weight: 700;
+  font-size: 14px;
 }

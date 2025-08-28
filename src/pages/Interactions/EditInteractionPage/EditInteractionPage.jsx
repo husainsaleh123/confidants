@@ -42,7 +42,7 @@ export default function EditInteractionPage() {
   if (!data) return <p>Interaction not found.</p>;
 
   return (
-    <section>
+    <section className={styles.page}>
       <InteractionForm
         heading="Edit Interaction"
         submitLabel="Update Interaction"
