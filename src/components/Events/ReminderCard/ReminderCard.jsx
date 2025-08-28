@@ -2,10 +2,7 @@ import RecurringToggle from "../RecurringToggle/RecurringToggle";
 import styles from "./ReminderCard.module.scss";
 import { Link } from "react-router-dom";
 
-/**
- * ReminderCard
- * Shows: title, date, description (optional), and linked friends (if any).
- */
+
 export default function ReminderCard({ reminder, showViewButton = false }) {
   if (!reminder) return null;
 

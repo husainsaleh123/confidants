@@ -5,7 +5,7 @@ import styles from "./EditReminderPage.module.scss";
 import { getEvent, updateEvent } from "../../../utilities/events-api";
 import ReminderForm from "../../../components/Events/ReminderForm/ReminderForm";
 import RecurringToggle from "../../../components/Events/RecurringToggle/RecurringToggle";
-// import { Button } from "../../../components/Button/Button";
+
 
 export default function EditEventPage() {
   const { id } = useParams();
@@ -16,7 +16,7 @@ export default function EditEventPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Load existing event
+
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -34,10 +34,10 @@ export default function EditEventPage() {
     };
   }, [id]);
 
-  // Prepare initial values for the form
+  
   const initial = useMemo(() => {
     if (!event) return null;
-    // Ensure friends is an array of IDs for FriendSelector
+    
     let friends = [];
     if (Array.isArray(event.friends)) {
       friends = event.friends.map(f => (typeof f === 'string' ? f : f._id || f.id)).filter(Boolean);
@@ -50,7 +50,7 @@ export default function EditEventPage() {
       description: event.description || "",
       recurring: event.recurring || false,
       friends,
-      // tags: join(event.tags),
+ 
     };
   }, [event]);
 
@@ -68,7 +68,7 @@ export default function EditEventPage() {
         recurring: typeof form.recurring === 'object' ? (form.recurring.enabled ? form.recurring.interval : 'never') : form.recurring || 'never',
       };
 
-      const updated = await updateEvent(id, payload); // PUT /api/events/:id
+      const updated = await updateEvent(id, payload); 
       if (updated && updated._id) navigate(`/events/${updated._id}`);
       else navigate(`/events/${id}`);
     } catch (e) {

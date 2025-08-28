@@ -10,7 +10,6 @@ export default function EventRemindersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // فرقنا بين النص المكتوب (searchText) واللي نبحث به فعلاً (query)
   const [searchText, setSearchText] = useState("");
   const [query, setQuery] = useState("");
 

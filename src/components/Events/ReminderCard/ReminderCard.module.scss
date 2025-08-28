@@ -1,35 +1,22 @@
-/* ReminderCard.module.scss */
-/* Palette (extracted): same as ShowReminderPage */
-:root {
-  --bg: #eaeaea;
-  --primary: #2a45f9;
-  --primary-hover: #4055ea;
-  --muted-1: #acaeb8;
-  --muted-2: #ced0d9;
-  --accent: #6a6fb6;
-  --danger: #990609;
-  --danger-hover: #b03033;
-}
-
 .card {
   background: #fff;
   border-radius: 16px;
   padding: 20px 22px;
-  border: 1px solid var(--muted-2);
+  border: 1px solid #ced0d9;
   box-shadow: 0 10px 28px rgba(0,0,0,.10);
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* Title + Date row */
+
 .header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px dashed var(--muted-2);
+  border-bottom: 1px dashed #ced0d9;
 }
 
 .title {
@@ -43,13 +30,13 @@
 .date {
   font-size: 13px;
   color: #6b7280;
-  background: var(--bg);
-  border: 1px solid var(--muted-2);
+  background: #eaeaea;
+  border: 1px solid #ced0d9;
   padding: 4px 8px;
   border-radius: 8px;
 }
 
-/* Details rows */
+
 .type, .friends {
   font-size: 14px;
   color: #334155;
@@ -66,7 +53,7 @@
   line-height: 1.55;
 }
 
-/* Actions (View button) */
+
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -75,7 +62,7 @@
 
 .viewBtn {
   text-decoration: none;
-  background: var(--primary);
+  background: blue;
   color: #fff;
   border-radius: 12px;
   padding: 8px 14px;
@@ -86,14 +73,14 @@
   transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
 
   &:hover {
-    background: var(--primary-hover);
+    background: #4055ea;
     box-shadow: 0 8px 18px rgba(42,69,249,.32);
     transform: translateY(-1px);
   }
 }
 
-/* Minor text tint for inline values */
+
 .friends span {
-  color: var(--accent);
+  color: #6a6fb6;
   font-weight: 600;
 }

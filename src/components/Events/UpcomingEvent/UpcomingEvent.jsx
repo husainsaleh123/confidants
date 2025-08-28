@@ -2,21 +2,16 @@
 import { useState } from "react";
 import styles from "./UpcomingEvents.module.scss";
 
-/**
- * UpcomingEvents
- * Shows summary of next few events (sorted by date).
- * Props:
- * - reminders: array of reminder objects
- */
+
 export default function UpcomingEvents({ reminders = [] }) {
   if (!reminders.length) return null;
 
-  // Sort by date
+
   const sorted = [...reminders].sort(
     (a, b) => new Date(a.date) - new Date(b.date)
   );
 
-  // Take first 3 upcoming events
+ 
   const next3 = sorted.slice(0, 3);
 
   return (
