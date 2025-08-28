@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { deleteInteraction } from "../../../utilities/interaction-api"; // optional fallback
+import { deleteInteraction } from "../../../utilities/interaction-api";
 import styles from "./InteractionCard.module.scss";
 
 export default function InteractionCard({ item, onDelete }) {
@@ -28,9 +28,8 @@ export default function InteractionCard({ item, onDelete }) {
 
     try {
       if (typeof onDelete === "function") {
-        await onDelete(_id); // defer to parent if provided
+        await onDelete(_id);
       } else {
-        // sensible fallback so the card also works in lists
         await deleteInteraction(_id);
         if (isDetailPage) nav("/interactions");
       }
@@ -41,47 +40,47 @@ export default function InteractionCard({ item, onDelete }) {
   };
 
   return (
-    <article className="ix-card ix-card--compact">
-      <h2 className="ix-title">{name}</h2>
-      <p className="ix-date"><strong>Date:</strong> {prettyDate}</p>
+    <article className={`${styles.card} ${styles.compact}`}>
+      <h2 className={styles.title}>{name}</h2>
+      <p className={styles.date}><strong>Date:</strong> {prettyDate}</p>
 
-      {description && <p className="ix-desc">{description}</p>}
+      {description && <p className={styles.desc}>{description}</p>}
 
       {friends.length > 0 && (
-        <div className="ix-friends">
+        <div className={styles.friends}>
           <strong>Friends:</strong>
-          <div className="ix-friend-chips">
+          <div className={styles.friendChips}>
             {friends.map((f) => (
-              <span className="ix-chip" key={f._id || f.name}>{f.name}</span>
+              <span className={styles.chip} key={f._id || f.name}>{f.name}</span>
             ))}
           </div>
         </div>
       )}
 
-      <div className="ix-actions">
+      <div className={styles.actions}>
         {!isDetailPage && (
-          <button type="button" className="ix-btn ix-btn-primary" onClick={handleView}>
+          <button type="button" className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleView}>
             View interaction
           </button>
         )}
 
         {isDetailPage && (
-          <button type="button" className="ix-btn ix-btn-ghost" onClick={() => nav("/interactions")}>
+          <button type="button" className={`${styles.btn} ${styles.btnGhost}`} onClick={() => nav("/interactions")}>
             ← Back
           </button>
         )}
 
-        <div className="ix-spacer" />
+        <div className={styles.spacer} />
 
         <button
           type="button"
-          className="ix-btn ix-btn-outline"
+          className={`${styles.btn} ${styles.btnOutline}`}
           onClick={() => nav(`/interactions/${_id}/edit`)}
         >
           Edit
         </button>
 
-        <button type="button" className="ix-btn ix-btn-danger" onClick={handleDelete}>
+        <button type="button" className={`${styles.btn} ${styles.btnDanger}`} onClick={handleDelete}>
           Delete
         </button>
       </div>
