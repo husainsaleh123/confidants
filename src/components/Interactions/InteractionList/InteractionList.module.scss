@@ -1,7 +1,7 @@
-/* InteractionList.module.scss */
+/* src/components/Interactions/InteractionList/InteractionList.module.scss */
 $brand: #2E46FF;
 
-/* ===== core (like your friendsList.scss) ===== */
+/* ===== grid of cards ===== */
 .grid {
   display: grid;
   gap: 1rem;
@@ -22,17 +22,17 @@ $brand: #2E46FF;
   font-weight: 600;
 }
 
-/* ===== optional: wireframe top controls ===== */
+/* ===== top bar: count + add button ===== */
 .topbar {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin: 0 0 1.25rem;
 }
 
 .count {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 900;
   color: #0b1b4f;
 }
@@ -41,47 +41,100 @@ $brand: #2E46FF;
   background: $brand;
   color: #fff;
   border: 1.5px solid $brand;
-  border-radius: 14px;
-  padding: .75rem 1.1rem;
+  border-radius: 12px;
+  padding: .65rem 1rem;
   font-weight: 900;
   cursor: pointer;
+  line-height: 1;
   white-space: nowrap;
+  transition: opacity .15s ease;
+
+  &:hover { opacity: .92; }
+  &:active { opacity: .85; }
 }
 
-/* filter & search row */
+/* ===== controls row: filter + search ===== */
 .controls {
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 1rem;
   align-items: center;
-  margin: 1rem 0;
+  margin: .25rem 0 1.25rem;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
 }
 
-/* compact select like the mock */
+/* filter label with funnel icon */
+.filterLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-weight: 800;
+  color: #111827;
+
+  &::before {
+    content: "🔻";
+    display: inline-block;
+    transform: rotate(180deg); /* شكل قُمع للأسفل مثل الوايرفريم */
+    font-size: 1.05rem;
+    line-height: 1;
+    color: $brand;
+  }
+}
+
+/* compact select pill (Latest/Oldest …) */
 .select {
-  padding: .6rem .9rem;
-  border: 1.5px solid rgba(46,70,255,.45);
+  padding: .5rem .9rem;
+  border: 1.5px solid rgba(46,70,255,.55);
   border-radius: 12px;
   background: #fff;
   font-weight: 800;
   color: #0b1b4f;
   outline: none;
+  line-height: 1;
+  min-height: 40px;
+  appearance: none;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233b4cc0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right .7rem center;
+  padding-right: 2.2rem;
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(46,70,255,.15);
+  }
 }
 
-/* search input + button */
+/* search input + button pair */
 .searchGroup {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: .75rem;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .searchInput {
   width: 100%;
-  padding: .9rem 1rem;
+  padding: .85rem 1rem;
   border-radius: 14px;
   border: 2px solid rgba(46,70,255,.6);
-  background: #f7f7fb;
+  background: #fff;
   outline: none;
+  font-weight: 600;
+  color: #0b1b4f;
+
+  &::placeholder { color: #6b7280; }
+
+  &:focus {
+    border-color: $brand;
+    box-shadow: 0 0 0 4px rgba(46,70,255,.14);
+  }
 }
 
 .searchBtn {
@@ -89,7 +142,13 @@ $brand: #2E46FF;
   color: #fff;
   border: 1.5px solid $brand;
   border-radius: 12px;
-  padding: .7rem 1rem;
+  padding: .8rem 1.1rem;
   font-weight: 900;
   cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity .15s ease;
+
+  &:hover { opacity: .92; }
+  &:active { opacity: .85; }
 }

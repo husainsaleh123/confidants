@@ -1,18 +1,30 @@
 /* pages/Interactions/AddInteractionPage/AddInteractionPage.module.scss */
 $brand: #2E46FF;
 
+/* يضبط الصفحة لتُطابق الوايرفريم: مساحة فوق، توسيط، عرض أقصى */
 .page {
   max-width: 940px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 2rem;
+  padding: 2.25rem 1rem 3rem;   /* نزّل المحتوى تحت النافبار ووفّر مساحة سفلية */
+  display: grid;
+  gap: 1rem;
+
+  @media (max-width: 720px) {
+    padding: 1.5rem 1rem 2.25rem;
+  }
 }
 
+/* (احتياطي) لو حطّيت عنوان بالصفحة غير عنوان الفورم */
 .title {
   font-size: 1.6rem;
   font-weight: 800;
   margin: 0 0 1rem;
+  text-align: center;
+  color: #0b1b4f;
 }
 
+/* بطاقة بيضاء عامّة إن احتجتها لشيء خارج الفورم
+   (الفورم نفسه عنده الكارد الرمادي الخاص فيه، لذلك غالبًا لن تحتاجها هنا) */
 .card {
   background: #fff;
   border: 1px solid #eef0f4;
@@ -23,7 +35,7 @@ $brand: #2E46FF;
     0 10px 24px rgba(17,24,39,.06);
 }
 
-/* optional back link / error styles if you add later */
+/* أزرار/رسالة خطأ اختيارية لو أضفتها لاحقًا */
 .backBtn {
   border: 1.5px solid $brand;
   color: $brand;

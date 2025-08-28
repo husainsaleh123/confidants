@@ -1,67 +1,115 @@
-/* ShowInteractionPage.module.scss */
-$page-max: 1100px;
-$brand: #2E46FF;
+/* ===== “Story” look for InteractionCard ===== */
 
-.page {
-  max-width: $page-max;
-  margin: 0 auto;
-  padding: 1.25rem 1rem 2rem;
+/* Card */
+.ix-card {
+  position: relative;
+  background: #f6f6f7;         /* same as .card in Story */
+  border: 1px solid #e7e7ea;
+  border-radius: 12px;
+  padding: 18px;
   display: grid;
-  gap: 1rem;
+  grid-template-columns: 1fr;   /* the card is single-column in your mock */
+  gap: 10px;
 }
 
-.actionsBar {
+/* Title + meta */
+.ix-title {
+  margin: 0 0 6px;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  font-weight: 700;
+  color: #0f172a;               /* slate-900 */
+}
+.ix-date {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  color: #111827;
+}
+.ix-desc {
+  margin: 2px 0 6px;
+  color: #111827;
+  line-height: 1.6;
+  font-size: 0.96rem;
+}
+
+/* Field rows (Type / Friends) */
+.ix-friends {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: .75rem;
-  align-items: center;
+  grid-template-columns: auto 1fr;
+  gap: 10px 12px;
+  align-items: start;
+}
+.ix-friends > strong {
+  font-weight: 700;
+  color: #111827;
+  line-height: 32px;
 }
 
-.spacer { /* fills the middle column */ }
-
-.backBtn,
-.editBtn,
-.removeBtn {
-  font-weight: 800;
-  border-radius: 9999px;
-  padding: .6rem 1rem;
-  line-height: 1;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Chips (match Story .tag/.friendTag) */
+.ix-friend-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ix-chip {
+  font-size: 12px;
+  padding: 4px 8px;
+  font-weight: 500;
+  border-radius: 16px;
+  background: #ffffff;
+  color: blue;                  /* indigo-ish */
+  border: 2px solid blue;
+  user-select: none;
 }
 
-.backBtn {
-  border: 1.5px solid $brand;
-  color: $brand;
-  background: #fff;
-}
-
-.rightActions {
-  display: inline-flex;
-  gap: .6rem;
-}
-
-.editBtn {
-  background: $brand;
-  color: #fff;
-  border: 1.5px solid $brand;
-}
-
-.removeBtn {
-  background: #991B1B;
-  color: #fff;
-  border: 1.5px solid #991B1B;
+/* Favourite star (top-right like mock) */
+.ix-star {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  height: 34px;
+  width: 34px;
+  border-radius: 50%;
+  border: 1px solid #dcdce0;
+  background: #ffffff;
+  color: #1f2937;
+  display: grid;
+  place-items: center;
   cursor: pointer;
 }
+.ix-star.is-on {
+  color: #2e46ff;               /* primary accent */
+  border-color: #2e46ff;
+}
 
-.muted { color: #6b7280; }
+/* Actions (Back/Edit/Delete style parity with Story’s .actions/.btns) */
+.ix-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ix-btn {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.ix-btn-primary {
+  background: blue;
+  color: #fff;
+}
+.ix-btn-danger {
+  background: #ef4444;
+  color: #fff;
+}
 
-.error {
-  color: #ef4444;
-  background: #fee2e2;
-  border: 1px solid #fecaca;
-  padding: .75rem 1rem;
-  border-radius: .75rem;
+/* Small helpers */
+.ix-muted { color: #475569; }
+
+/* Responsive touch-up */
+@media (max-width: 640px) {
+  .ix-card { padding: 14px; border-radius: 10px; }
+  .ix-title { font-size: 1.25rem; }
 }
