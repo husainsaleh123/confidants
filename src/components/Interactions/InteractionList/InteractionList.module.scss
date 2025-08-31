@@ -78,7 +78,7 @@ $brand: #2E46FF;
   &::before {
     content: "🔻";
     display: inline-block;
-    transform: rotate(180deg); /* شكل قُمع للأسفل مثل الوايرفريم */
+    transform: rotate(180deg); 
     font-size: 1.05rem;
     line-height: 1;
     color: $brand;
@@ -113,10 +113,6 @@ $brand: #2E46FF;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: .75rem;
-
-  @media (max-width: 720px) {
-    grid-template-columns: 1fr;
-  }
 }
 
 .searchInput {
@@ -143,7 +139,7 @@ $brand: #2E46FF;
   border: 1.5px solid $brand;
   border-radius: 12px;
   padding: .8rem 1.1rem;
-  font-weight: 900;
+  font-weight: 700;
   cursor: pointer;
   line-height: 1;
   white-space: nowrap;
@@ -151,4 +147,28 @@ $brand: #2E46FF;
 
   &:hover { opacity: .92; }
   &:active { opacity: .85; }
+}
+
+
+@media (max-width: 768px) {
+  .controls .searchGroup {            /* keep two columns on mobile */
+    grid-template-columns: 1fr auto;
+  }
+
+  .controls .searchInput {
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .controls .searchBtn {
+    display: inline-flex;             /* prevent full-width buttons */
+    align-items: center;
+    justify-content: center;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    width: auto !important;           /* beats any 100% width rule */
+    justify-self: end;                /* sit flush right in the grid */
+    white-space: nowrap;
+  }
 }

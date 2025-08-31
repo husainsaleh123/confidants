@@ -257,11 +257,12 @@ export default function ShowStoryPage() {
     }
   }
 
-  return (
+   return (
     <main className={styles.page}>
       <div className={styles.container}>
         <h1 className={styles.title}>{story.title || "Untitled story"}</h1>
 
+        {/* CARD: media + details */}
         <section className={styles.card}>
           {/* LEFT: media */}
           <div className={styles.media}>
@@ -274,12 +275,7 @@ export default function ShowStoryPage() {
             {allImages.length > 1 && (
               <div className={styles.thumbRow}>
                 {allImages.slice(1).map((src, i) => (
-                  <img
-                    key={i}
-                    className={styles.thumb}
-                    src={src}
-                    alt={`thumb ${i + 2}`}
-                  />
+                  <img key={i} className={styles.thumb} src={src} alt={`thumb ${i + 2}`} />
                 ))}
               </div>
             )}
@@ -289,8 +285,7 @@ export default function ShowStoryPage() {
           <div className={styles.content}>
             {story.date && (
               <div className={styles.metaLine}>
-                <span className={styles.metaLabel}>Date:</span>{" "}
-                {fmtDate(story.date)}
+                <span className={styles.metaLabel}>Date:</span> {fmtDate(story.date)}
               </div>
             )}
 
@@ -301,9 +296,7 @@ export default function ShowStoryPage() {
                 <span className={styles.metaLabel}>Friends involved:</span>
                 <div className={styles.tags}>
                   {friends.map((f, i) => (
-                    <span className={styles.tag} key={`${f}-${i}`}>
-                      {f}
-                    </span>
+                    <span className={styles.tag} key={`${f}-${i}`}>{f}</span>
                   ))}
                 </div>
               </div>
@@ -316,51 +309,46 @@ export default function ShowStoryPage() {
                 </span>
                 <div className={styles.tags}>
                   {moods.map((m, i) => (
-                    <span className={styles.tag} key={`${m}-${i}`}>
-                      {m}
-                    </span>
+                    <span className={styles.tag} key={`${m}-${i}`}>{m}</span>
                   ))}
                 </div>
               </div>
             )}
 
             {story.createdAt && (
-              <div className={styles.metaLine}>
-                Logged on {fmtLogged(story.createdAt)}
-              </div>
+              <div className={styles.metaLine}>Logged on {fmtLogged(story.createdAt)}</div>
             )}
-
-            <div className={styles.actions}>
-              <button
-                type="button"
-                className={`${styles.btn} ${styles.btnBack}`}
-                onClick={() => navigate("/stories")}
-              >
-                &larr; Back
-              </button>
-              {sid && (
-                <>
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnEdit}`}
-                    onClick={() =>
-                      navigate(`/stories/${sid}/edit`, { state: { story } })
-                    }
-                  >
-                    Edit story
-                  </button>
-                  <button
-                    type="button"
-                    className={`${styles.btn} ${styles.btnDanger}`}
-                    onClick={handleDelete}
-                  >
-                    Remove story
-                  </button>
-                </>
-              )}
-            </div>
           </div>
         </section>
+
+        {/* ACTIONS (moved outside the card) */}
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.btnBack}`}
+            onClick={() => navigate("/stories")}
+          >
+            &larr; Back
+          </button>
+          {sid && (
+            <>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnEdit}`}
+                onClick={() => navigate(`/stories/${sid}/edit`, { state: { story } })}
+              >
+                Edit story
+              </button>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.btnDanger}`}
+                onClick={handleDelete}
+              >
+                Remove story
+              </button>
+            </>
+          )}
+        </div>
 
         <p className={styles.footerNote}></p>
       </div>

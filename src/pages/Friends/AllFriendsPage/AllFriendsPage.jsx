@@ -58,7 +58,7 @@ export default function AllFriendsPage() {
     <section className={styles.page}>
       {/* Top bar: count + Add friend */}
       <div className={styles.topbar}>
-        <p className={styles.count}>You have {friends.length} friend{friends.length === 1 ? "" : "s"}!</p>
+        <p className={styles.count}>You have <strong>{friends.length}</strong> friend{friends.length === 1 ? "" : "s"}!</p>
         <Link to="/friends/new" className={styles.addBtn}>
           + Add friend
         </Link>

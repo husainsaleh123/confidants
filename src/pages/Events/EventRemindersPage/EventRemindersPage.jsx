@@ -44,7 +44,7 @@ export default function EventRemindersPage() {
     <section className={styles.page}>
       <div className={styles.topRow}>
         <p className={styles.count}>
-          You have {reminders.length} Event Reminder
+          You have <strong>{reminders.length}</strong> Event Reminder
           {reminders.length === 1 ? "" : "s"}!
         </p>
         <Link to="/events/new" className={styles.addBtn}>
@@ -64,7 +64,7 @@ export default function EventRemindersPage() {
           onClick={() => { setQuery(searchText); }}
           className={styles.searchBtn}
         >
-          Search
+          Search 🔍
         </button>
         <button
           onClick={() => { setSearchText(""); setQuery(""); }}

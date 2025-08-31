@@ -71,7 +71,7 @@ export default function AllInteractionsPage() {
       {/* top bar: count + add button */}
       <div className={styles.topbar}>
         <p className={styles.count}>
-          You have logged {filtered.length || items.length} interactions!
+          You have logged <strong>{filtered.length || items.length}</strong> interactions!
         </p>
         <button
           className={styles.addBtn}

@@ -15,11 +15,11 @@ $brand: #2E46FF;
   padding: .75rem 1rem;
   border-radius: 9999px;
   border: 1px solid #e5e7eb;
-  background: #fff;
+  background: #eeeeee;
   font-size: .95rem;
   outline: none;
   transition: box-shadow .15s ease, border-color .15s ease;
-
+  margin-bottom: 10px;
   &:focus {
     border-color: $brand;
     box-shadow: 0 0 0 4px rgba(46, 70, 255, .15);

@@ -3,7 +3,7 @@ $brand: #2E46FF;
 
 .page {
   max-width: $page-max;
-  margin: 0 auto;
+  margin: 30px auto;
   padding: 1.25rem 1rem 2rem;
   display: grid;
   gap: 1rem;
@@ -21,7 +21,7 @@ $brand: #2E46FF;
 .backBtn,
 .editBtn,
 .removeBtn {
-  font-weight: 800;
+  font-weight: 700;
   border-radius: 9999px;
   padding: .6rem 1rem;
   line-height: 1;
@@ -49,9 +49,9 @@ $brand: #2E46FF;
 }
 
 .removeBtn {
-  background: #991B1B;
+  background: red;
   color: #fff;
-  border: 1.5px solid #991B1B;
+  border: 1.5px solid red;
   cursor: pointer;
 }
 

@@ -1,4 +1,4 @@
-$brand: #2E46FF;
+$brand: blue;
 /* Page layout */
 .page {
   display: flex;
@@ -6,7 +6,7 @@ $brand: #2E46FF;
   gap: 1.25rem;
   padding: 1.25rem 1rem 2rem;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 .header {
@@ -14,7 +14,7 @@ $brand: #2E46FF;
   grid-template-columns: 1fr;
   gap: 1rem;
 
-  @media (min-width: 860px) {
+  @media (min-width: 768px) {
     grid-template-columns: auto 1fr;
     align-items: center;
   }
@@ -22,7 +22,7 @@ $brand: #2E46FF;
 
 .title {
   font-size: 1.75rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: .2px;
 }
 
@@ -57,9 +57,9 @@ $brand: #2E46FF;
   background: $brand;
   color: #fff;
   border: 1.5px solid $brand;
-  border-radius: 9999px;
+  border-radius: 15px;
   padding: .6rem 1rem;
-  font-weight: 800;
+  font-weight: 600;
   text-decoration: none;
 }
 .filterWrap {
@@ -71,4 +71,9 @@ $brand: #2E46FF;
 .filterLabel {
   font-weight: 800;
   color: #111827;
+}
+
+.count{
+  font-weight: 400;
+  font-size: 16px;
 }

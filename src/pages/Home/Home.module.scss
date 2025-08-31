@@ -26,7 +26,7 @@
           text-decoration: none;
           padding: 0.5rem 1rem;
           border-radius: 5px;
-          background-color: #007bff; // blue
+          background-color: blue; // blue
           color: white;
           font-weight: 500;
           transition: background-color 0.3s, color 0.3s;
@@ -75,5 +75,35 @@
   .error {
     color: red;
     font-weight: 500;
+  }
+}
+
+/* Mobile & small tablets */
+@media (max-width: 768px) {
+  .Home {
+    .header {
+      .headerRow {
+        flex-direction: column;       /* stack title above links */
+        align-items: stretch;
+        gap: .75rem;
+        margin-top: 20px;
+
+        .links {
+          width: 100%;
+          justify-content: flex-start; /* left-align wrapped buttons */
+          gap: .5rem .75rem;           /* tighter gaps on mobile */
+          flex-wrap: wrap;
+
+          .link {
+            padding: 0.4rem 0.8rem;    /* slightly smaller pill */
+            border-radius: 12px;
+            font-weight: 700;
+            background-color: blue;
+            margin-top: 10px;
+            margin-bottom: 15px;
+          }
+        }
+      }
+    }
   }
 }

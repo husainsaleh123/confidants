@@ -4,7 +4,7 @@ $brand: #2efff1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: .75rem 1.25rem;
+  padding: .5rem 1rem;
   background: blue;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -13,13 +13,23 @@ $brand: #2efff1;
   align-items: center;
 
   img {
+     height: clamp(32px, 5.5vw, 44px);  /* responsive but capped */
     height: 80px;   
     width: auto;
     display: block;
   }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;                        /* space between icon and text */
+    min-height: 40px;                  /* keeps header height steady */
+    line-height: 1;                    /* avoid extra baseline wiggle */
+  }
 }
 
 .navbar__links {
+  border-top: 0;
   display: flex;
   gap: 1.25rem;
 }
@@ -39,4 +49,58 @@ $brand: #2efff1;
   color: $brand;
   border-bottom: 2px solid $brand;
   padding-bottom: .2rem;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: .65rem 1rem;
+    gap: .75rem;
+  }
+
+  .navbar__logo img {
+    height: 68px; 
+  }
+
+  .navbar__links {
+    gap: 1rem;
+  }
+
+  .navbar__link {
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: .6rem 0.9rem;
+    flex-direction: column;      
+    align-items: stretch;        
+  }
+
+  .navbar__logo {
+    justify-content: space-between;
+  }
+
+  .navbar__logo img {
+    height: 70px;         
+  }
+
+  .navbar__links {
+    width: 100%;
+    justify-content: flex-start;
+    gap: .5rem 1rem;
+    flex-wrap: wrap;             
+    margin-top: .5rem;
+    padding-top: .5rem;
+    border-top: 1px solid rgba(255,255,255,.25);
+  }
+
+  .navbar__link {
+    padding: .5rem .25rem;       
+    display: inline-block;
+  }
+
+  .active {
+    padding-bottom: .15rem;      
+  }
 }

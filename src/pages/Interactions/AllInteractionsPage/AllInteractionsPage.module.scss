@@ -1,5 +1,5 @@
 /* pages/Interactions/AllInteractionsPage/AllInteractionsPage.module.scss */
-$brand: #2E46FF;
+$brand: blue;
 $text-dark: #111827;
 $text-muted: #6b7280;
 
@@ -23,8 +23,8 @@ $text-muted: #6b7280;
 }
 
 .count {
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 400;
   color: $text-dark;
   margin: 0;
 }
@@ -133,7 +133,7 @@ $text-muted: #6b7280;
   border: 1.5px solid $brand;
   border-radius: 12px;
   padding: .75rem 1.1rem;
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   transition: opacity .15s ease;
 
@@ -152,4 +152,27 @@ $text-muted: #6b7280;
   border: 1px solid #fecaca;
   padding: .75rem 1rem;
   border-radius: .75rem;
+}
+
+
+@media (max-width: 768px) {
+  .searchGroup {
+    grid-template-columns: 1fr auto;   /* keep two columns on mobile */
+  }
+
+  .searchInput {
+    height: 44px;
+    border-radius: 12px;
+    font-size: 16px;                    /* avoids iOS zoom */
+  }
+
+  .searchBtn {
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    width: auto !important;             /* override any 100% width */
+    justify-self: end;                  /* tuck to the right */
+    white-space: nowrap;
+    font-weight: 600;
+  }
 }
