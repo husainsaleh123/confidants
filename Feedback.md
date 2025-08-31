@@ -1,4 +1,5 @@
 # Feedback for Confidants
+<img width="2560" height="1440" alt="Confidants App" src="https://github.com/user-attachments/assets/099fbd93-d5dc-4d9e-9c07-9ea4bf990441" />
 
 ## 1. Executive Summary
 
