@@ -122,6 +122,11 @@ confidants/
 
 ---
 
+## 🔗 Demo Link
+
+https://confidants.onrender.com/
+
+
 ### 🤼 Credits
 
    - __Husain Alnahash__
